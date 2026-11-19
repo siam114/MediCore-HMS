@@ -1,93 +1,122 @@
-# MediCore – Hospital Management System
+<div align="center">
 
-**MediCore HMS** is a modern, scalable Hospital Management System built with enterprise-grade architecture.
+# 🏥 MediCore – Hospital Management System
 
----
+**An enterprise-grade Hospital Management System architecture built with Next.js, TypeScript, and Tailwind CSS.**
 
-## 🏗️ Architecture Overview
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-UI_Primitives-black?style=flat-square)](https://ui.shadcn.com/)
+[![Status](https://img.shields.io/badge/Status-Initial_Setup_Complete-brightgreen?style=flat-square)](#)
 
-The project is structured into modular layers designed for independent scaling:
-
-- **`frontend/`**: Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Zustand, TanStack Table, React Hook Form, Zod.
-- **`backend/`** *(Upcoming)*: Node.js, Express.js, MongoDB, REST API, JWT Authentication.
-
----
-
-## 🚀 Frontend Stack
-
-- **Framework:** Next.js (App Router)
-- **Language:** TypeScript (Strict Mode)
-- **Styling:** Tailwind CSS & shadcn/ui
-- **State Management:** Zustand
-- **Forms & Validation:** React Hook Form + Zod
-- **Data Tables:** TanStack React Table
-- **Charts:** Recharts
-- **Icons:** Lucide React
-- **Notifications:** Sonner
+</div>
 
 ---
 
-## 📁 Frontend Directory Structure
+## 📌 Project Summary
+
+MediCore HMS is designed to handle hospital operations including patient registration, doctor schedules, appointment management, billing, and lab records. The repository is partitioned into independent frontend and backend workspaces for maintainability and scalability.
+
+---
+
+## 🏗️ System Architecture
 
 ```
-frontend/src/
-  ├── app/                  # App Router pages and layout
-  ├── components/
-  │   ├── ui/               # shadcn/ui primitives
-  │   ├── shared/           # Reusable UI components
-  │   └── layout/           # Page and layout wrappers
-  ├── config/               # App and environment configs
-  ├── constants/            # Application constants and API endpoints
-  ├── hooks/                # Custom React hooks
-  ├── lib/
-  │   ├── utils/            # Utility helpers (cn, etc.)
-  │   └── validations/      # Zod validation schemas
-  ├── services/
-  │   └── api/              # Fetch API client with JWT support
-  ├── store/                # Zustand global state
-  ├── types/                # TypeScript type definitions
-  ├── providers/            # Global context providers
-  └── mock-data/            # Mock fixtures for testing
+MediCore/
+├── frontend/                  # Next.js frontend workspace
+│   ├── src/
+│   │   ├── app/               # App Router pages and root layout
+│   │   ├── components/        # ui, shared, and layout component library
+│   │   ├── config/            # Site metadata and environment configuration
+│   │   ├── constants/         # Storage keys, routes, and endpoints
+│   │   ├── hooks/             # Reusable custom React hooks
+│   │   ├── lib/               # Utility functions and Zod validations
+│   │   ├── services/api/      # HTTP client configured for REST/JWT backend
+│   │   ├── store/             # Zustand application state management
+│   │   ├── types/             # TypeScript definitions and API interfaces
+│   │   ├── providers/         # Global application providers and Sonner toaster
+│   │   └── mock-data/         # Test fixtures and mock datasets
+│   ├── .env.example           # Environment variables blueprint
+│   ├── package.json           # Dependencies and project scripts
+│   └── tsconfig.json          # Strict TypeScript compiler options
+├── backend/                   # Node.js / Express.js REST API (Upcoming)
+├── .gitignore                 # Root ignore for environment and build files
+└── README.md                  # Project documentation
 ```
 
 ---
 
-## 🛠️ Getting Started
+## 💻 Frontend Technology Stack
+
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js 16** | Server/Client rendering, App Router, metadata management |
+| **TypeScript** | Strict type safety across components and services |
+| **Tailwind CSS v4** | Modern theme styling with OKLCH variables |
+| **shadcn/ui** | Accessible UI primitives built on Radix / Base UI |
+| **Zustand** | Lightweight global client state management |
+| **TanStack React Table** | High-performance headless data tables |
+| **React Hook Form + Zod** | Controlled form workflows with schema validation |
+| **Recharts** | Medical metrics and analytics charts |
+| **Sonner** | Clean toast notifications for user interactions |
+| **date-fns** | Medical scheduling and timestamp formatting |
+
+---
+
+## ⚡ Quick Start Guide
 
 ### Prerequisites
+- Node.js (version 20 or higher)
+- npm package manager
 
-- Node.js (v20+ recommended)
-- npm
+### Steps to Run Locally
 
-### Installation & Running Frontend
-
-1. Navigate to the frontend directory:
+1. **Clone the repository:**
    ```bash
-   cd frontend
+   git clone https://github.com/siam114/MediCore-HMS.git
+   cd MediCore-HMS/frontend
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. Set up environment variables:
+3. **Configure environment:**
    ```bash
    cp .env.example .env.local
    ```
 
-4. Run development server:
+4. **Start development server:**
    ```bash
    npm run dev
    ```
+   *(On Windows PowerShell, if script execution is restricted, run `npm.cmd run dev`)*
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. **Open in browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 📜 Available Scripts (Frontend)
+## 📋 Available Commands
 
-- `npm run dev`: Starts the Next.js development server.
-- `npm run build`: Compiles production build.
-- `npm run start`: Runs the built production server.
-- `npm run lint`: Executes ESLint code quality checks.
+Inside the `frontend` folder:
+
+- `npm run dev`: Launch local Next.js development server
+- `npm run build`: Compile and optimize production build
+- `npm run start`: Serve built production artifacts
+- `npm run lint`: Perform ESLint code quality checks
+- `npx tsc --noEmit`: Execute full TypeScript type validation
+
+---
+
+## 🎯 Development Roadmap
+
+- [x] Initial Next.js + TypeScript environment setup
+- [x] Complete directory structure and core utilities
+- [x] REST API client setup with JWT auth header preparation
+- [ ] Backend workspace initialization (Node.js, Express, MongoDB)
+- [ ] Authentication and Role-Based Access Control (Admin, Doctor, Staff, Patient)
+- [ ] Appointment scheduling and patient management modules
+- [ ] Hospital billing, prescription, and pharmacy management
