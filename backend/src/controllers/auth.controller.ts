@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service";
 import { AuthenticatedRequest } from "../types";
+import { getUsersCollection, toSafeUser } from "../models/user.model";
 
 export class AuthController {
   public static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -69,6 +70,22 @@ export class AuthController {
         success: true,
         message: "Google authentication successful",
         data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async getAllUsers(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const users = getUsersCollection();
+      const allDocs = await users.find({}).sort({ createdAt: -1 }).toArray();
+      res.status(200).json({
+        success: true,
+        data: {
+          users: allDocs.map((doc) => toSafeUser(doc)),
+          total: allDocs.length,
+        },
       });
     } catch (error) {
       next(error);

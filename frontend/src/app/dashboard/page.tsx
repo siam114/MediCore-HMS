@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -12,16 +12,25 @@ import {
   Key,
   CheckCircle2,
   HeartPulse,
+  Users,
+  Stethoscope,
+  UserCheck,
+  Building2,
+  RefreshCw,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/store";
+import { authService } from "@/services/api";
+import type { UserSession } from "@/types";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, token, isAuthenticated, isLoading, clearAuth, initialize } = useAuthStore();
+  const [allUsers, setAllUsers] = useState<UserSession[]>([]);
+  const [isUsersLoading, setIsUsersLoading] = useState(false);
 
   useEffect(() => {
     initialize();
@@ -32,6 +41,40 @@ export default function DashboardPage() {
       router.push("/login");
     }
   }, [isLoading, isAuthenticated, router]);
+
+  const fetchUsers = async () => {
+    setIsUsersLoading(true);
+    try {
+      const res = await authService.getAllUsers();
+      if (res.success && res.data) {
+        setAllUsers(res.data.users);
+      }
+    } catch (err: unknown) {
+      console.error("Failed to load users for admin:", err);
+    } finally {
+      setIsUsersLoading(false);
+    }
+  };
+
+  // Load all users asynchronously if current user is ADMIN
+  useEffect(() => {
+    let isSubscribed = true;
+    if (user?.role === "ADMIN") {
+      authService
+        .getAllUsers()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setAllUsers(res.data.users);
+          }
+        })
+        .catch((err) => {
+          console.error("Error loading users:", err);
+        });
+    }
+    return () => {
+      isSubscribed = false;
+    };
+  }, [user?.role]);
 
   const handleLogout = () => {
     clearAuth();
@@ -57,6 +100,10 @@ export default function DashboardPage() {
       ? "admin"
       : "success";
 
+  const totalDoctors = allUsers.filter((u) => u.role === "DOCTOR").length;
+  const totalPatients = allUsers.filter((u) => u.role === "PATIENT").length;
+  const totalStaff = allUsers.filter((u) => u.role === "STAFF").length;
+
   return (
     <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950">
       {/* Top Navigation Bar */}
@@ -68,7 +115,9 @@ export default function DashboardPage() {
             </div>
             <div>
               <span className="font-bold text-slate-900 dark:text-slate-100">MediCore HMS</span>
-              <span className="ml-2 text-xs text-slate-400">Hospital Portal</span>
+              <span className="ml-2 text-xs text-slate-400">
+                {user.role === "ADMIN" ? "Admin Control Center" : "Hospital Portal"}
+              </span>
             </div>
           </div>
 
@@ -91,7 +140,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 sm:px-6 max-w-4xl space-y-6">
+      <main className="container mx-auto px-4 py-8 sm:px-6 max-w-5xl space-y-6">
         {/* Welcome Banner */}
         <div className="rounded-2xl border border-teal-200/80 bg-gradient-to-r from-teal-500/10 via-emerald-500/5 to-transparent p-6 dark:border-teal-900/40">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -103,7 +152,9 @@ export default function DashboardPage() {
                 <Badge variant={roleVariant}>{user.role}</Badge>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                You are securely logged into MediCore Hospital Management System.
+                {user.role === "ADMIN"
+                  ? "You have full administrator access to hospital personnel, patient databases, and system credentials."
+                  : "You are securely logged into MediCore Hospital Management System."}
               </p>
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
@@ -112,6 +163,146 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* If ADMIN: Show Hospital Statistics Cards */}
+        {user.role === "ADMIN" && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Total Doctors</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {totalDoctors}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-600">
+                  <Stethoscope className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Total Patients</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {totalPatients}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600">
+                  <UserCheck className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Hospital Staff</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {totalStaff}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-600">
+                  <Building2 className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">System Users</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {allUsers.length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-600">
+                  <Users className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* If ADMIN: Show Live Users Database Table */}
+        {user.role === "ADMIN" && (
+          <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Users className="h-5 w-5 text-teal-600" />
+                  Hospital Personnel & User Directory
+                </CardTitle>
+                <CardDescription>
+                  Live user records fetched from MongoDB Atlas via secure RBAC endpoint
+                </CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchUsers}
+                disabled={isUsersLoading}
+                className="gap-1.5"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${isUsersLoading ? "animate-spin" : ""}`} />
+                Refresh
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto rounded-lg border border-slate-100 dark:border-slate-800">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase dark:bg-slate-900/60 dark:text-slate-400">
+                    <tr>
+                      <th className="px-4 py-3">Name</th>
+                      <th className="px-4 py-3">Email Address</th>
+                      <th className="px-4 py-3">Role</th>
+                      <th className="px-4 py-3">Account Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {allUsers.map((item) => (
+                      <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
+                          {item.name}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">
+                          {item.email}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            variant={
+                              item.role === "ADMIN"
+                                ? "admin"
+                                : item.role === "DOCTOR"
+                                ? "doctor"
+                                : "success"
+                            }
+                          >
+                            {item.role}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            {item.status || "ACTIVE"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {allUsers.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="px-4 py-8 text-center text-slate-400">
+                          {isUsersLoading ? "Loading users from database..." : "No users found."}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* User Profile & Session Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -174,7 +365,9 @@ export default function DashboardPage() {
                   What can you do now?
                 </div>
                 <p className="text-slate-500 dark:text-slate-400">
-                  This proves your full authentication lifecycle is operational: Next.js frontend is communicating securely with Node.js Express & MongoDB Atlas.
+                  {user.role === "ADMIN"
+                    ? "As Administrator, you can view the entire hospital roster, oversee patient registrations, and monitor doctor credentials."
+                    : "This proves your full authentication lifecycle is operational: Next.js frontend is communicating securely with Node.js Express & MongoDB Atlas."}
                 </p>
               </div>
             </CardContent>

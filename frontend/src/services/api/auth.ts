@@ -37,4 +37,8 @@ export const authService = {
   }): Promise<ApiResponse<AuthResponseData>> {
     return apiClient.post<AuthResponseData>("/auth/google", data);
   },
+
+  async getAllUsers(): Promise<ApiResponse<{ users: UserSession[]; total: number }>> {
+    return apiClient.get<{ users: UserSession[]; total: number }>("/auth/users");
+  },
 };

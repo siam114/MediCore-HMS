@@ -103,6 +103,11 @@ export default function LoginPage() {
     setValue("password", "SecurePassword123");
   };
 
+  const fillAdminCredentials = () => {
+    setValue("email", "admin@medicore.com");
+    setValue("password", "AdminPassword123");
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-teal-50/20 to-sky-50/30 p-4 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md space-y-6">
@@ -271,25 +276,44 @@ export default function LoginPage() {
             </form>
 
             {/* Quick Demo Credentials Box */}
-            <div className="rounded-lg border border-teal-200/60 bg-teal-50/50 p-3 text-xs dark:border-teal-900/40 dark:bg-teal-950/20">
-              <div className="flex items-center justify-between font-medium text-teal-800 dark:text-teal-300">
-                <span className="flex items-center gap-1.5">
-                  <Stethoscope className="h-3.5 w-3.5" />
-                  Test Doctor Account (MongoDB Atlas)
-                </span>
-                <button
-                  type="button"
-                  onClick={fillTestCredentials}
-                  className="rounded bg-teal-600 px-2 py-0.5 text-[11px] text-white hover:bg-teal-700"
-                >
-                  Auto Fill
-                </button>
+            <div className="space-y-2">
+              <div className="rounded-lg border border-purple-200/60 bg-purple-50/50 p-2.5 text-xs dark:border-purple-900/40 dark:bg-purple-950/20">
+                <div className="flex items-center justify-between font-medium text-purple-800 dark:text-purple-300">
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
+                    Hospital Super Admin
+                  </span>
+                  <button
+                    type="button"
+                    onClick={fillAdminCredentials}
+                    className="rounded bg-purple-600 px-2 py-0.5 text-[11px] text-white hover:bg-purple-700 shadow-sm"
+                  >
+                    Auto Fill Admin
+                  </button>
+                </div>
+                <p className="mt-1 text-slate-500 text-[11px] dark:text-slate-400">
+                  <span className="font-mono text-slate-700 dark:text-slate-300">admin@medicore.com</span> / <span className="font-mono text-slate-700 dark:text-slate-300">AdminPassword123</span>
+                </p>
               </div>
-              <p className="mt-1 text-slate-500 dark:text-slate-400">
-                Email: <span className="font-mono text-slate-700 dark:text-slate-300">dr.siam@medicore.com</span>
-                <br />
-                Pass: <span className="font-mono text-slate-700 dark:text-slate-300">SecurePassword123</span>
-              </p>
+
+              <div className="rounded-lg border border-teal-200/60 bg-teal-50/50 p-2.5 text-xs dark:border-teal-900/40 dark:bg-teal-950/20">
+                <div className="flex items-center justify-between font-medium text-teal-800 dark:text-teal-300">
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <Stethoscope className="h-3.5 w-3.5 text-teal-600" />
+                    Doctor Account
+                  </span>
+                  <button
+                    type="button"
+                    onClick={fillTestCredentials}
+                    className="rounded bg-teal-600 px-2 py-0.5 text-[11px] text-white hover:bg-teal-700 shadow-sm"
+                  >
+                    Auto Fill Doctor
+                  </button>
+                </div>
+                <p className="mt-1 text-slate-500 text-[11px] dark:text-slate-400">
+                  <span className="font-mono text-slate-700 dark:text-slate-300">dr.siam@medicore.com</span> / <span className="font-mono text-slate-700 dark:text-slate-300">SecurePassword123</span>
+                </p>
+              </div>
             </div>
           </CardContent>
 
