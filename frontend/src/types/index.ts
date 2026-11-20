@@ -2,10 +2,13 @@
  * Global and API type definitions
  */
 
+export type UserRole = "ADMIN" | "DOCTOR" | "STAFF" | "PATIENT";
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message?: string;
   data: T;
+  errors?: unknown;
 }
 
 export interface ApiErrorResponse {
@@ -28,7 +31,14 @@ export interface PaginatedResponse<T> {
 
 export interface UserSession {
   id: string;
+  name: string;
   email: string;
-  role: string;
-  token?: string;
+  role: UserRole;
+  phone?: string;
+  status?: string;
+}
+
+export interface AuthResponseData {
+  user: UserSession;
+  token: string;
 }
