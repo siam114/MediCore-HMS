@@ -52,4 +52,26 @@ export class AuthController {
       message: "Logged out successfully",
     });
   }
+
+  public static async googleAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { name, email, avatar, googleId } = req.body;
+      if (!email || !name) {
+        res.status(400).json({
+          success: false,
+          message: "Name and email are required for Google authentication",
+        });
+        return;
+      }
+
+      const result = await AuthService.googleAuth({ name, email, avatar, googleId });
+      res.status(200).json({
+        success: true,
+        message: "Google authentication successful",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

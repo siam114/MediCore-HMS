@@ -109,4 +109,51 @@ export class AuthService {
 
     return toSafeUser(user);
   }
+
+  public static async googleAuth(input: {
+    name: string;
+    email: string;
+    avatar?: string;
+    googleId?: string;
+  }) {
+    const users = getUsersCollection();
+    const normalizedEmail = input.email.toLowerCase().trim();
+
+    let user = await users.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      const now = new Date();
+      const newDoc: UserDocument = {
+        name: input.name.trim(),
+        email: normalizedEmail,
+        role: USER_ROLES.PATIENT,
+        avatar: input.avatar || "",
+        status: "ACTIVE",
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      const result = await users.insertOne(newDoc);
+      user = await users.findOne({ _id: result.insertedId });
+    }
+
+    if (!user) {
+      const error: any = new Error("Failed to create or retrieve user from Google authentication");
+      error.statusCode = 500;
+      throw error;
+    }
+
+    const safeUser = toSafeUser(user);
+
+    const token = signToken({
+      userId: safeUser.id,
+      email: safeUser.email,
+      role: safeUser.role,
+    });
+
+    return {
+      user: safeUser,
+      token,
+    };
+  }
 }

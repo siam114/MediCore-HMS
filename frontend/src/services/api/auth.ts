@@ -28,4 +28,13 @@ export const authService = {
   async logout(): Promise<ApiResponse<void>> {
     return apiClient.post<void>(API_ENDPOINTS.AUTH.LOGOUT);
   },
+
+  async googleAuth(data: {
+    name: string;
+    email: string;
+    avatar?: string;
+    googleId?: string;
+  }): Promise<ApiResponse<AuthResponseData>> {
+    return apiClient.post<AuthResponseData>("/auth/google", data);
+  },
 };
