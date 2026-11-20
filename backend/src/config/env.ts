@@ -1,5 +1,9 @@
+import path from "path";
 import dotenv from "dotenv";
 
+// First attempt to load .env from backend directory directly
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 dotenv.config();
 
 export const ENV = {

@@ -5,6 +5,9 @@ import { ENV } from "./config/env";
 async function bootstrap() {
   const app = createApp();
 
+  // Connect to MongoDB natively before accepting requests
+  await connectDB();
+
   // Start HTTP Server
   const server = app.listen(ENV.PORT, () => {
     console.log("==================================================");
@@ -12,14 +15,9 @@ async function bootstrap() {
     console.log(`📡 URL: http://localhost:${ENV.PORT}`);
     console.log(`🩺 Health check: http://localhost:${ENV.PORT}/api/health`);
     console.log(`🔐 Auth API: http://localhost:${ENV.PORT}/api/auth`);
-    console.log(`🗄️ Database: Native MongoDB Driver`);
+    console.log(`🗄️ Database: Native MongoDB Driver (Atlas)`);
     console.log(`🌍 Environment: ${ENV.NODE_ENV}`);
     console.log("==================================================");
-  });
-
-  // Connect to MongoDB natively
-  connectDB().catch((error) => {
-    console.error("[MongoDB] Initial connection notice:", error instanceof Error ? error.message : error);
   });
 
   // Graceful shutdown handling
