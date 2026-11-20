@@ -1,12 +1,12 @@
 # 🏥 MediCore HMS – Backend API
 
-RESTful API backend for **MediCore – Hospital Management System**, built with Node.js, Express.js, TypeScript, and MongoDB.
+RESTful API backend for **MediCore – Hospital Management System**, built with Node.js, Express.js, TypeScript, and native MongoDB Driver.
 
 ---
 
 ## 🚀 Features
 
-- **TypeScript Architecture**: Strict typing, modern clean directory structure.
+- **Native MongoDB Driver**: Direct, high-performance database connectivity via `MongoClient` without ODM overhead.
 - **Role-Based Access Control (RBAC)**: Support for `ADMIN`, `DOCTOR`, `STAFF`, and `PATIENT`.
 - **JWT Authentication**: JSON Web Tokens for stateless authentication.
 - **Password Hashing**: `bcryptjs` with auto-salting on user creation/updates.

@@ -1,7 +1,8 @@
 import { Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import { AuthenticatedRequest } from "../types";
 import { verifyToken } from "../utils/jwt.utils";
-import { User } from "../models/user.model";
+import { getUsersCollection } from "../models/user.model";
 import { UserRole } from "../constants/roles";
 
 export async function authenticate(
@@ -17,7 +18,6 @@ export async function authenticate(
     if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.split(" ")[1];
     } else if (req.cookies && req.cookies.token) {
-      // Optional check from cookies
       token = req.cookies.token;
     }
 
@@ -30,7 +30,7 @@ export async function authenticate(
     }
 
     const decoded = verifyToken(token);
-    if (!decoded) {
+    if (!decoded || !ObjectId.isValid(decoded.userId)) {
       res.status(401).json({
         success: false,
         message: "Invalid or expired token. Please log in again.",
@@ -38,7 +38,9 @@ export async function authenticate(
       return;
     }
 
-    const user = await User.findById(decoded.userId).select("-password");
+    const users = getUsersCollection();
+    const user = await users.findOne({ _id: new ObjectId(decoded.userId) });
+
     if (!user) {
       res.status(401).json({
         success: false,
@@ -56,7 +58,7 @@ export async function authenticate(
     }
 
     req.user = {
-      id: user.id,
+      id: user._id!.toString(),
       email: user.email,
       name: user.name,
       role: user.role,

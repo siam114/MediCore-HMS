@@ -1,5 +1,5 @@
 import { createApp } from "./app";
-import { connectDB } from "./config/db";
+import { connectDB, closeDB } from "./config/db";
 import { ENV } from "./config/env";
 
 async function bootstrap() {
@@ -12,18 +12,20 @@ async function bootstrap() {
     console.log(`📡 URL: http://localhost:${ENV.PORT}`);
     console.log(`🩺 Health check: http://localhost:${ENV.PORT}/api/health`);
     console.log(`🔐 Auth API: http://localhost:${ENV.PORT}/api/auth`);
+    console.log(`🗄️ Database: Native MongoDB Driver`);
     console.log(`🌍 Environment: ${ENV.NODE_ENV}`);
     console.log("==================================================");
   });
 
-  // Connect to MongoDB
+  // Connect to MongoDB natively
   connectDB().catch((error) => {
-    console.error("[MongoDB] Connection failure:", error);
+    console.error("[MongoDB] Initial connection notice:", error instanceof Error ? error.message : error);
   });
 
   // Graceful shutdown handling
-  const shutdown = () => {
+  const shutdown = async () => {
     console.log("\n[Server] Shutting down gracefully...");
+    await closeDB();
     server.close(() => {
       console.log("[Server] Closed remaining connections.");
       process.exit(0);

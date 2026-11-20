@@ -1,23 +1,26 @@
 import { Router } from "express";
-import mongoose from "mongoose";
+import { isDbConnected, getDb } from "../config/db";
 import authRoutes from "./auth.routes";
 
 const router = Router();
 
 // Health check endpoint
-router.get("/health", (_req, res) => {
-  const dbState = mongoose.connection.readyState;
-  const dbStatusMap: Record<number, string> = {
-    0: "disconnected",
-    1: "connected",
-    2: "connecting",
-    3: "disconnecting",
-  };
+router.get("/health", async (_req, res) => {
+  let dbStatus = "disconnected";
+
+  if (isDbConnected()) {
+    try {
+      await getDb().command({ ping: 1 });
+      dbStatus = "connected";
+    } catch {
+      dbStatus = "error";
+    }
+  }
 
   res.status(200).json({
     success: true,
-    message: "MediCore HMS API is running",
-    database: dbStatusMap[dbState] || "unknown",
+    message: "MediCore HMS API is running (Native MongoDB)",
+    database: dbStatus,
     timestamp: new Date().toISOString(),
   });
 });
