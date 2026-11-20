@@ -1,3 +1,9 @@
+# Secret / Local Documentation (never commit)
+PROJECT_CREDENTIALS_AND_INFO.md
+*.local.md
+notes.txt
+secrets.txt
+
 # Dependencies
 node_modules/
 frontend/node_modules/
