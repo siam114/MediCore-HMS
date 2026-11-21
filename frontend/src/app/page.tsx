@@ -659,19 +659,30 @@ export default function HomePage() {
                     />
                   </div>
 
-                  <select
-                    value={selectedDept}
-                    onChange={(e) => setSelectedDept(e.target.value)}
-                    className="h-12 rounded-lg border border-slate-200 bg-slate-50/70 px-3.5 text-xs sm:text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                  >
-                    <option value="All">All Specialties</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Pediatrics">Pediatrics</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="General Surgery">General Surgery</option>
-                    <option value="Dermatology">Dermatology</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      value={selectedDept}
+                      onChange={(e) => setSelectedDept(e.target.value)}
+                      className="h-12 w-full appearance-none rounded-lg border border-slate-200 bg-slate-50/70 pl-4 pr-10 text-xs sm:text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600 cursor-pointer"
+                    >
+                      <option value="All">All Specialties</option>
+                      <option value="Cardiology">Cardiology</option>
+                      <option value="Neurology">Neurology</option>
+                      <option value="Pediatrics">Pediatrics</option>
+                      <option value="Orthopedics">Orthopedics</option>
+                      <option value="General Surgery">General Surgery</option>
+                      <option value="Dermatology">Dermatology</option>
+                      <option value="Gynecology & Obstetrics">Gynecology</option>
+                      <option value="Nephrology">Nephrology</option>
+                      <option value="Oncology">Oncology</option>
+                      <option value="Gastroenterology">Gastroenterology</option>
+                      <option value="Urology">Urology</option>
+                      <option value="Ophthalmology">Ophthalmology</option>
+                      <option value="ENT (Ear, Nose, Throat)">ENT</option>
+                      <option value="Psychiatry">Psychiatry</option>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  </div>
 
                   <Button
                     type="submit"
