@@ -1029,13 +1029,10 @@ export default function HomePage() {
                 <div className="pt-6 mt-4 border-t border-slate-200/80 dark:border-slate-800">
                   <Link
                     href="/doctors"
-                    className={cn(
-                      buttonVariants({ size: "sm" }),
-                      "w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold"
-                    )}
+                    className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-teal-600/25 transition-all duration-200 hover:from-teal-700 hover:to-emerald-700 hover:shadow-lg hover:shadow-teal-600/35 hover:-translate-y-0.5 active:translate-y-0"
                   >
-                    Book Health Package
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                    <span>Book Health Package</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
                 </div>
               </div>
@@ -1168,10 +1165,7 @@ export default function HomePage() {
 
                   <Link
                     href="/login"
-                    className={cn(
-                      buttonVariants({ size: "sm" }),
-                      "bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs"
-                    )}
+                    className="inline-flex items-center justify-center rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs px-4 py-2 shadow-sm hover:shadow-md transition-all active:scale-95"
                   >
                     Book Serial
                   </Link>
