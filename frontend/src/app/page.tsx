@@ -30,114 +30,312 @@ import {
   BadgeAlert,
   Star,
   ExternalLink,
+  ChevronDown,
+  Microscope,
+  BedDouble,
+  Heart,
+  Pill,
+  Globe,
+  Building2,
+  ShieldAlert,
+  FileCheck,
+  Plane,
+  Syringe,
+  Check,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+// 1. Core Clinical Centers of Excellence
 const CLINICAL_DEPARTMENTS = [
   {
-    name: "Cardiology & Heart Center",
+    name: "Cardiology & Cardiac Surgery",
     icon: HeartPulse,
-    doctorsCount: 14,
-    description: "24/7 Emergency Cath Lab, coronary angioplasty, pacemaker clinic, and advanced bypass surgery.",
+    doctorsCount: 16,
+    description: "24/7 Primary Emergency Cath Lab, coronary angioplasty, pacemaker clinic, and minimally invasive bypass surgery.",
     query: "Cardiology",
     badge: "24/7 Cath Lab",
+    highlight: "Door-to-balloon time < 45 mins",
   },
   {
-    name: "Neurology & Spine Care",
+    name: "Neurology & Spine Surgery",
     icon: Brain,
-    doctorsCount: 10,
-    description: "Comprehensive stroke unit, neuro-rehabilitation, brain surgery, and minimally invasive spine care.",
+    doctorsCount: 12,
+    description: "Comprehensive acute stroke unit, neuro-rehabilitation, micro-neurosurgery, and endoscopic brain & spine care.",
     query: "Neurology",
     badge: "Stroke Unit",
+    highlight: "Advanced 3T Neuro-Navigation",
   },
   {
     name: "Pediatrics & Neonatology",
     icon: Baby,
-    doctorsCount: 12,
-    description: "Level-3 NICU & PICU with round-the-clock pediatric emergency and neonatal intensive care.",
+    doctorsCount: 14,
+    description: "Level-3 NICU & PICU with round-the-clock neonatal emergency, child cardiology, and developmental pediatrics.",
     query: "Pediatrics",
     badge: "NICU Level 3",
+    highlight: "50-Bed Dedicated Neonatal Wing",
   },
   {
-    name: "Orthopedics & Joint Clinic",
+    name: "Orthopedics & Joint Care",
     icon: Bone,
-    doctorsCount: 8,
-    description: "Robotic assisted knee & hip replacement, sports medicine, trauma surgery, and arthroscopy.",
+    doctorsCount: 10,
+    description: "Computer & robotic assisted knee & hip replacement, sports arthroscopy, complex pelvis fracture, and trauma care.",
     query: "Orthopedics",
     badge: "Robotic Surgery",
+    highlight: "Fast-Track Joint Recovery Protocol",
   },
   {
-    name: "Nephrology & Dialysis",
+    name: "Nephrology & 24/7 Dialysis",
     icon: Stethoscope,
-    doctorsCount: 6,
-    description: "State-of-the-art 30-bed dialysis unit, kidney disease management, and transplant follow-up.",
+    doctorsCount: 8,
+    description: "State-of-the-art 30-bed hemodialysis unit, CRRT, peritoneal dialysis, kidney biopsy, and transplant follow-up.",
     query: "General Medicine",
-    badge: "24-Hr Dialysis",
+    badge: "30-Bed Dialysis",
+    highlight: "Zero-Infection Water Treatment Plant",
   },
   {
     name: "General & Laparoscopic Surgery",
     icon: Activity,
-    doctorsCount: 11,
-    description: "Minimally invasive laparoscopic surgery, surgical oncology, and modular laminar flow OTs.",
+    doctorsCount: 12,
+    description: "Laparoscopic gastrointestinal surgery, hernia repair, surgical oncology, and infection-controlled laminar flow OTs.",
     query: "General Surgery",
     badge: "Modular OT",
+    highlight: "Day-Care Minimally Invasive Surgery",
+  },
+  {
+    name: "Dermatology & Skin Center",
+    icon: Sparkles,
+    doctorsCount: 6,
+    description: "Clinical dermatology, phototherapy, laser skin treatments, allergy testing, and chronic psoriasis clinic.",
+    query: "Dermatology",
+    badge: "Laser Clinic",
+    highlight: "State-of-the-Art Dermatosurgery",
+  },
+  {
+    name: "Oncology & Cancer Institute",
+    icon: Syringe,
+    doctorsCount: 9,
+    description: "Comprehensive medical and surgical oncology, day-care chemotherapy unit, and molecular genetic tumor boards.",
+    query: "General Surgery",
+    badge: "Cancer Center",
+    highlight: "Multidisciplinary Tumor Board",
   },
 ];
 
+// 2. Hospital Stats
 const HOSPITAL_STATS = [
   { value: "120+", label: "Specialist Physicians", sub: "Internationally Board-Certified" },
-  { value: "450+", label: "Inpatient Beds", sub: "50+ Modular Intensive Care ICUs" },
-  { value: "24/7", label: "Emergency & Trauma", sub: "Dedicated Stroke & Cardiac Response" },
-  { value: "99.4%", label: "Patient Satisfaction", sub: "Verified Clinical Outcome Rate" },
+  { value: "450+", label: "Inpatient Beds", sub: "50+ Modular Smart ICUs" },
+  { value: "25,000+", label: "Surgeries Completed", sub: "99.4% Verified Clinical Success" },
+  { value: "24/7", label: "Emergency & Trauma", sub: "Dedicated Stroke & Cardiac Units" },
 ];
 
-const HOSPITAL_FEATURES = [
+// 3. Preventive Health Packages
+const HEALTH_PACKAGES = [
   {
-    title: "24/7 Rapid Emergency & Trauma",
-    description: "Level-1 emergency department with dedicated trauma resuscitation bays, cardiac monitoring, and immediate ambulance dispatch.",
-    icon: Ambulance,
+    id: "executive-cardiac",
+    name: "Executive Cardiac Wellness",
+    tag: "Most Popular",
+    price: 6500,
+    testsCount: 22,
+    description: "Designed for proactive cardiovascular evaluation, early coronary risk detection, and lipid profile screening.",
+    features: [
+      "2D Color Doppler Echocardiogram",
+      "Treadmill Stress Test (TMT / Exercise ECG)",
+      "Comprehensive Lipid Profile & Hs-CRP",
+      "HbA1c & Fasting Blood Sugar",
+      "Kidney Function (Serum Creatinine & Urea)",
+      "Senior Cardiologist Consultation",
+    ],
   },
   {
-    title: "High-Resolution Diagnostic Imaging",
-    description: "Latest generation 3T High-Field MRI, 128-Slice Low-Dose Dual Energy CT scanner, and digital color Doppler ultrasonography.",
-    icon: Sparkles,
+    id: "comprehensive-master",
+    name: "Whole Body Master Checkup",
+    tag: "Comprehensive",
+    price: 9800,
+    testsCount: 48,
+    description: "Complete head-to-toe clinical assessment covering vital organs: heart, liver, kidneys, lungs, and metabolic profile.",
+    features: [
+      "Ultrasonography of Whole Abdomen & Pelvis",
+      "Chest X-Ray Digital & Pulmonary Function Test",
+      "Liver Function (Bilirubin, SGOT, SGPT, Alk Phos)",
+      "Kidney & Thyroid Profile (TSH, FT4)",
+      "Complete Blood Count (CBC with ESR)",
+      "General Physician & Dietician Consultation",
+    ],
   },
   {
-    title: "Infection-Controlled Modular OTs",
-    description: "Ultra-clean laminar airflow surgical theaters equipped for complex cardiac, neuro, robotic, and orthopedic procedures.",
-    icon: ShieldCheck,
+    id: "senior-citizen",
+    name: "Senior Citizen Care Package",
+    tag: "Ages 55+",
+    price: 8200,
+    testsCount: 36,
+    description: "Specialized geriatric screening tailored for bone density, arthritis, prostate health, and cardiovascular risk.",
+    features: [
+      "Bone Mineral Density (DEXA Scan)",
+      "Serum Calcium, Vitamin D3 & Uric Acid",
+      "PSA (Prostate Specific Antigen) for Men",
+      "Cardiac ECG & Echocardiogram",
+      "Electrolyte Panel (Sodium, Potassium, Chloride)",
+      "Geriatric Specialist Consultation",
+    ],
   },
   {
-    title: "Paperless Digital Health Records",
-    description: "Instant access to prescriptions, doctor visiting schedules, diagnostic lab test results, and billing receipts through our patient portal.",
-    icon: FileText,
+    id: "women-wellness",
+    name: "Women's Comprehensive Wellness",
+    tag: "Women's Health",
+    price: 7500,
+    testsCount: 32,
+    description: "Holistic health assessment for women of all ages with specialized breast, cervical, and hormonal screenings.",
+    features: [
+      "Digital Bilateral Breast Ultrasound / Mammogram",
+      "Liquid Based Cervical Pap Smear",
+      "Pelvic Ultrasound (Uterus & Ovaries)",
+      "Complete Thyroid & Hormonal Panel",
+      "Serum Iron & Ferritin Screening",
+      "Consultant Gynecologist Review",
+    ],
   },
 ];
 
+// 4. Cutting Edge Technology
+const HOSPITAL_TECHNOLOGIES = [
+  {
+    name: "Siemens Magnetom 3T Silent MRI",
+    category: "Diagnostic Radiology",
+    desc: "Ultra-high field 3 Tesla scanner offering crystal-clear brain, spine, and musculoskeletal imaging with 70% acoustic noise reduction.",
+    badge: "Ultra-High 3T",
+  },
+  {
+    name: "GE 128-Slice Dual-Energy Cardiac CT",
+    category: "Cardiovascular Imaging",
+    desc: "Rapid non-invasive coronary angiogram capturing the whole heart in less than 5 cardiac cycles with ultra-low radiation doses.",
+    badge: "Low Radiation",
+  },
+  {
+    name: "Modular Class-100 Laminar OTs",
+    category: "Surgical Suites",
+    desc: "Hermetically sealed surgical suites with HEPA filtration providing 99.97% pathogen-free airflow for complex open-heart and joint surgeries.",
+    badge: "Infection-Free",
+  },
+  {
+    name: "Bi-Plane Digital Cath Lab",
+    category: "Interventional Suite",
+    desc: "State-of-the-art dual-axis fluoroscopy for complex brain aneurysm coiling, coronary angioplasty, and structural heart repairs.",
+    badge: "Real-time 3D",
+  },
+];
+
+// 5. Featured Specialists
+const FEATURED_DOCTORS = [
+  {
+    name: "Dr. Siam Ahmed",
+    dept: "Cardiology & Interventional Care",
+    qual: "MBBS, FCPS (Cardiology), FACC (USA)",
+    chamber: "Chamber #402, Block B (4th Floor)",
+    time: "05:00 PM - 09:00 PM (Sat - Wed)",
+    fee: 1500,
+    exp: 14,
+  },
+  {
+    name: "Dr. Nusrat Jahan",
+    dept: "Neurology & Stroke Center",
+    qual: "MBBS, MD (Neurology), Fellow Stroke (Singapore)",
+    chamber: "Chamber #308, Block A (3rd Floor)",
+    time: "06:00 PM - 09:30 PM (Sun - Thu)",
+    fee: 1400,
+    exp: 12,
+  },
+  {
+    name: "Dr. Tanvir Hasan",
+    dept: "Pediatrics & Neonatal Care",
+    qual: "MBBS, DCH, FCPS (Pediatrics)",
+    chamber: "Chamber #210, Block C (2nd Floor)",
+    time: "04:00 PM - 08:00 PM (Everyday)",
+    fee: 1200,
+    exp: 15,
+  },
+  {
+    name: "Dr. Ayesha Siddiqua",
+    dept: "Orthopedics & Robotic Joint Replacement",
+    qual: "MBBS, MS (Ortho), Fellow Arthroscopy (UK)",
+    chamber: "Chamber #505, Block B (5th Floor)",
+    time: "05:30 PM - 09:00 PM (Sat - Wed)",
+    fee: 1500,
+    exp: 16,
+  },
+];
+
+// 6. Patient Testimonials
 const PATIENT_TESTIMONIALS = [
   {
-    quote: "The cardiology emergency team saved my father during a midnight heart crisis. The angioplasty was completed in under 45 minutes with extreme professionalism.",
+    quote: "During my father's acute midnight heart crisis, the ambulance arrived in 18 minutes with full cardiac monitoring. The Cath Lab team completed the emergency angioplasty in under 40 minutes.",
     author: "Mahmudur Rahman",
-    relation: "Son of Cardiac Patient",
+    relation: "Son of Cardiac Patient (Bashundhara)",
+    dept: "Department of Cardiology",
     rating: 5,
-    department: "Department of Cardiology",
   },
   {
-    quote: "Exceptional pediatric care. The doctors and nursing staff in the pediatric unit treated my daughter with so much tenderness and warmth during her recovery.",
+    quote: "My 3-year-old was admitted to the Pediatric ICU with severe pneumonia. The compassionate care of the nursing staff and doctors gave us immense strength. She made a complete recovery.",
     author: "Farhana Chowdhury",
-    relation: "Mother of 5-year-old Patient",
+    relation: "Mother of Pediatric Patient (Uttara)",
+    dept: "Pediatrics & Neonatal Care",
     rating: 5,
-    department: "Pediatrics & Child Health",
   },
   {
-    quote: "Booking specialist doctors through MediCore portal was seamless. Clean hospital environment, zero waiting chaos, and clear prescription instructions.",
-    author: "Zubair Al-Mamun",
-    relation: "Orthopedic Patient",
+    quote: "Had total knee replacement by Dr. Ayesha Siddiqua using robotic assistance. I was able to walk with support within 36 hours and fully returned to my morning walks in four weeks.",
+    author: "Engr. Nazmul Huda",
+    relation: "Orthopedic Patient (Gulshan)",
+    dept: "Orthopedics & Joint Clinic",
     rating: 5,
-    department: "Orthopedic & Joint Center",
+  },
+];
+
+// 7. Frequently Asked Questions
+const FAQ_ITEMS = [
+  {
+    q: "How do I book an emergency ambulance and what is the hotline number?",
+    a: "Our emergency ambulance command center is active 24/7. You can dial our direct emergency line 10666 from any mobile or landline across Bangladesh for immediate ICU/Cardiac ambulance dispatch with trained paramedic staff.",
+  },
+  {
+    q: "Can I download my blood test and diagnostic imaging reports online?",
+    a: "Yes. All lab results, ultrasound, MRI, and CT scan reports are automatically synced to our secure Patient Portal. Simply log in with your registered phone number or email to view and download PDF reports anytime.",
+  },
+  {
+    q: "What are the visiting hours for inpatients, ICUs, and general cabins?",
+    a: "General in-patient cabins allow visitors from 04:30 PM to 06:30 PM daily (one visitor per patient at a time to maintain infection control). ICU visiting hours are strictly 11:30 AM to 12:00 PM and 05:00 PM to 05:30 PM for immediate family only.",
+  },
+  {
+    q: "Which insurance policies and corporate cashless health cards are accepted?",
+    a: "We accept cashless hospitalization for all major national and international health insurances including MetLife, Green Delta, Pragati Life, Bupa, Cigna, and over 40 corporate TPA partner networks. Our 24/7 Corporate Desk assists with pre-authorization.",
+  },
+  {
+    q: "How can international or long-distance patients schedule consultations?",
+    a: "Our International Patient Care Department assists outstation and overseas patients with preliminary tele-consultations, doctor appointment scheduling, airport ambulance pickup, and hospital guest-house arrangements.",
+  },
+];
+
+// 8. Hospital News & Medical Bulletins
+const HOSPITAL_NEWS = [
+  {
+    date: "November 18, 2026",
+    category: "Clinical Milestone",
+    title: "MediCore Successfully Performs 500th Robotic-Assisted Joint Replacement",
+    summary: "Our Orthopedic Surgery Center reached a landmark milestone with sub-millimeter surgical accuracy and rapid patient discharge within 48 hours.",
+  },
+  {
+    date: "November 10, 2026",
+    category: "Emergency Care",
+    title: "Door-to-Balloon Time Drops to Record 38 Minutes for Heart Attack Patients",
+    summary: "Dedicated 24/7 rapid interventional cath lab protocols ensure life-saving artery clearance well below the international 90-minute benchmark.",
+  },
+  {
+    date: "October 28, 2026",
+    category: "Community Health",
+    title: "Free Pediatric Congenital Heart Screening Camp Benefits 400+ Children",
+    summary: "Pediatric cardiac team conducted comprehensive echocardiograms and health assessments for underprivileged children in Dhaka division.",
   },
 ];
 
@@ -146,6 +344,7 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchDoctor, setSearchDoctor] = useState("");
   const [selectedDept, setSelectedDept] = useState("All");
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,17 +357,24 @@ export default function HomePage() {
     }
   };
 
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100 selection:bg-teal-600 selection:text-white">
-      {/* 1. TOP ANNOUNCEMENT & ACCREDITATION BAR */}
+
+      {/* ========================================================================= */}
+      {/* SECTION 1: TOP EMERGENCY, ACCREDITATION & PATIENT ACCESS BAR              */}
+      {/* ========================================================================= */}
       <div className="border-b border-teal-900/10 bg-slate-900 text-slate-200 text-xs py-2 px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
         <div className="w-full max-w-[1640px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
-          {/* Left: Emergency Hotline & Location */}
+          {/* Emergency Hotline & Campus */}
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
             <div className="flex items-center gap-1.5 font-semibold text-rose-400">
               <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
               <Phone className="h-3.5 w-3.5" />
-              <span>24/7 Emergency & Ambulance:</span>
+              <span>24/7 Emergency Ambulance:</span>
               <a href="tel:10666" className="text-white hover:underline underline-offset-2 font-bold tracking-wide">
                 10666
               </a>
@@ -176,7 +382,7 @@ export default function HomePage() {
             <span className="hidden sm:inline text-slate-600">|</span>
             <div className="hidden sm:flex items-center gap-1 text-slate-300">
               <Phone className="h-3.5 w-3.5 text-teal-400" />
-              <span>Helpline:</span>
+              <span>Appointment Line:</span>
               <a href="tel:+8809610010666" className="hover:text-white transition-colors">
                 +880 9610-010666
               </a>
@@ -188,7 +394,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right: Hospital Accreditations & Fast Links */}
+          {/* Accreditations & Portals */}
           <div className="flex items-center gap-3 text-[11px] text-slate-300">
             <div className="hidden xl:flex items-center gap-1.5 text-teal-300 font-medium bg-teal-950/80 px-2.5 py-0.5 rounded-full border border-teal-800/40">
               <ShieldCheck className="h-3.5 w-3.5 text-teal-400" />
@@ -206,17 +412,19 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 2. MAIN HOSPITAL HEADER & NAVIGATION */}
+      {/* ========================================================================= */}
+      {/* SECTION 2: STICKY HOSPITAL MAIN NAVIGATION                                */}
+      {/* ========================================================================= */}
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-xs dark:border-slate-800 dark:bg-slate-900/95">
         <div className="w-full max-w-[1640px] mx-auto flex h-20 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
-          {/* Hospital Brand Logo */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-all">
               <Activity className="h-7 w-7" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50 font-sans">
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
                   MediCore
                 </span>
                 <span className="rounded-md bg-teal-50 px-1.5 py-0.5 text-[10px] font-bold text-teal-700 border border-teal-200 dark:bg-teal-950 dark:border-teal-800 dark:text-teal-300">
@@ -229,8 +437,8 @@ export default function HomePage() {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+          {/* Desktop Nav */}
+          <nav className="hidden xl:flex items-center gap-1 2xl:gap-2">
             <Link
               href="/doctors"
               className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
@@ -244,30 +452,36 @@ export default function HomePage() {
               Clinical Specialties
             </a>
             <a
-              href="#emergency"
+              href="#health-packages"
+              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+            >
+              Health Checkups
+            </a>
+            <a
+              href="#technology"
+              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+            >
+              Technology & OTs
+            </a>
+            <a
+              href="#emergency-unit"
               className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
             >
               24/7 Trauma & Emergency
             </a>
             <a
-              href="#why-us"
+              href="#patient-care"
               className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
             >
-              Why MediCore
-            </a>
-            <a
-              href="#testimonials"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
-            >
-              Patient Reviews
+              Patient Guide
             </a>
           </nav>
 
-          {/* Right Action Buttons */}
+          {/* Right Actions */}
           <div className="hidden sm:flex items-center gap-3">
             <a
               href="tel:10666"
-              className="hidden xl:inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 border border-rose-200 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-300 transition-colors"
+              className="hidden lg:inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 border border-rose-200 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-300 transition-colors"
             >
               <Ambulance className="h-4 w-4 text-rose-600 animate-pulse" />
               <span>Ambulance 10666</span>
@@ -290,7 +504,7 @@ export default function HomePage() {
                 "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-md shadow-teal-600/20"
               )}
             >
-              Book Appointment
+              Book Serial
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Link>
           </div>
@@ -298,7 +512,7 @@ export default function HomePage() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+            className="xl:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -307,7 +521,7 @@ export default function HomePage() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-200 bg-white px-6 py-6 space-y-4 shadow-xl dark:border-slate-800 dark:bg-slate-900">
+          <div className="xl:hidden border-t border-slate-200 bg-white px-6 py-6 space-y-4 shadow-xl dark:border-slate-800 dark:bg-slate-900">
             <div className="flex flex-col space-y-2">
               <Link
                 href="/doctors"
@@ -324,18 +538,39 @@ export default function HomePage() {
                 Clinical Departments & Centers
               </a>
               <a
-                href="#emergency"
+                href="#health-packages"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2.5 font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800"
               >
-                24/7 Emergency & ICU
+                Preventive Health Checkup Packages
               </a>
               <a
-                href="#why-us"
+                href="#technology"
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2.5 font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800"
               >
-                Hospital Infrastructure & Technology
+                Hospital Technology & Modular OTs
+              </a>
+              <a
+                href="#emergency-unit"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800"
+              >
+                24/7 Emergency & ICU Response
+              </a>
+              <a
+                href="#patient-care"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800"
+              >
+                How to Book & Patient Journey
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800"
+              >
+                Frequently Asked Questions
               </a>
             </div>
 
@@ -345,7 +580,7 @@ export default function HomePage() {
                 className="flex items-center justify-center gap-2 rounded-lg bg-rose-600 py-3 text-sm font-bold text-white shadow-sm"
               >
                 <Ambulance className="h-4 w-4" />
-                Emergency Hotline: 10666
+                Emergency Ambulance: 10666
               </a>
               <div className="grid grid-cols-2 gap-2">
                 <Link
@@ -353,7 +588,7 @@ export default function HomePage() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-center rounded-lg border border-slate-300 py-2.5 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200"
                 >
-                  Sign In
+                  Portal Sign In
                 </Link>
                 <Link
                   href="/register"
@@ -368,10 +603,11 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* 3. HERO SECTION WITH DOCTOR SEARCH */}
+      {/* ========================================================================= */}
+      {/* SECTION 3: HERO BANNER WITH INTERACTIVE DOCTOR SEARCH ENGINE              */}
+      {/* ========================================================================= */}
       <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/60 via-slate-50 to-white dark:from-slate-900/60 dark:via-slate-950 dark:to-slate-950 py-12 md:py-20 lg:py-24">
-        {/* Subtle hospital geometry background */}
-        <div className="absolute inset-0 bg-[radial-gradient(#0d9488_1px,transparent_1px)] opacity-[0.07] [background-size:24px_24px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#0d9488_1px,transparent_1px)] opacity-[0.06] [background-size:24px_24px] pointer-events-none" />
 
         <div className="relative w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -379,26 +615,26 @@ export default function HomePage() {
             <div className="lg:col-span-7 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 rounded-full bg-teal-600/10 px-3.5 py-1.5 text-xs font-semibold text-teal-800 dark:bg-teal-500/10 dark:text-teal-300 border border-teal-600/20">
                 <Sparkles className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
-                <span>Premier Tertiary Healthcare & Super Specialty Hospital</span>
+                <span>Premier Tertiary Healthcare & Specialist Research Center</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
-                World-Class Clinical Care,{" "}
+                Advanced Medicine,{" "}
                 <span className="text-teal-600 dark:text-teal-400 underline decoration-teal-500/30 decoration-wavy">
                   Compassionate
                 </span>{" "}
-                Healing.
+                Clinical Care.
               </h1>
 
               <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal">
-                MediCore Hospitals brings together over 120+ internationally board-certified specialists, 24/7 round-the-clock emergency trauma response, high-precision 3T MRI diagnostics, and 50 modular ICUs to deliver exceptional healthcare in Bangladesh.
+                MediCore Hospitals brings together over 120+ internationally board-certified medical specialists, 24/7 acute trauma & stroke response, high-precision 3T MRI diagnostics, and 50 modular smart ICUs to deliver exceptional healthcare in Bangladesh.
               </p>
 
-              {/* Quick Action Doctor Search Box */}
+              {/* Quick Doctor Search Box */}
               <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900/90 dark:shadow-none space-y-3">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <Stethoscope className="h-4 w-4 text-teal-600" />
-                  <span>Find Your Specialist Doctor or Department</span>
+                  <span>Find Your Specialist Doctor or Clinical Department</span>
                 </div>
 
                 <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch gap-2.5">
@@ -406,7 +642,7 @@ export default function HomePage() {
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <Input
                       type="text"
-                      placeholder="Doctor name, specialty, or condition (e.g. Heart, Spine, Child)..."
+                      placeholder="Physician name, symptom, or chamber (e.g. Heart, Spine, Pediatric)..."
                       value={searchDoctor}
                       onChange={(e) => setSearchDoctor(e.target.value)}
                       className="pl-10 h-12 bg-slate-50/70 border-slate-200 dark:bg-slate-800/80 dark:border-slate-700 text-sm focus-visible:ring-teal-600"
@@ -436,9 +672,9 @@ export default function HomePage() {
                   </Button>
                 </form>
 
-                {/* Popular Search Badges */}
+                {/* Popular Tags */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
-                  <span className="text-slate-400 font-medium">Quick Search:</span>
+                  <span className="text-slate-400 font-medium">Frequent Inquiries:</span>
                   {["Cardiology", "Neurology", "Pediatrics", "Orthopedics"].map((dept) => (
                     <button
                       key={dept}
@@ -452,15 +688,15 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Trust Indicators */}
+              {/* Trust Badges */}
               <div className="flex flex-wrap items-center gap-6 pt-2 text-xs text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span>JCI Quality Standard</span>
+                  <span>JCI Hospital Safety Protocols</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span>Immediate Appointment Confirmation</span>
+                  <span>Instant SMS/Email Serial Confirmation</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
@@ -469,17 +705,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: Hospital Quick Cards & Emergency Response Card */}
+            {/* Right Column: Emergency & Fast Action Card */}
             <div className="lg:col-span-5 space-y-4">
-              {/* Emergency Response Box */}
               <div className="rounded-2xl border-2 border-rose-200 bg-gradient-to-br from-rose-50 via-white to-rose-50/50 p-6 shadow-xl dark:border-rose-900/60 dark:from-rose-950/40 dark:via-slate-900 dark:to-rose-950/20 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-2.5 py-0.5 text-[11px] font-bold text-white uppercase tracking-wider">
-                      Immediate Response
+                      Immediate Critical Response
                     </span>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                      24/7 Emergency & ICU Care
+                      24/7 Trauma, ICU & Ambulance
                     </h3>
                   </div>
                   <div className="h-12 w-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 dark:bg-rose-950">
@@ -488,7 +723,7 @@ export default function HomePage() {
                 </div>
 
                 <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Our emergency center is staffed 24 hours with certified critical-care physicians, rapid catheterization response, and fully equipped ICU ambulances.
+                  Our emergency wing is staffed 24 hours with certified critical-care resuscitation consultants, rapid-response catheterization teams, and mobile ICU ambulances.
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 pt-1">
@@ -510,7 +745,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Fast Clinic Service Links */}
+              {/* Fast Service Cards */}
               <div className="grid grid-cols-2 gap-3">
                 <Link
                   href="/doctors"
@@ -519,8 +754,8 @@ export default function HomePage() {
                   <div className="h-9 w-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center mb-2 group-hover:bg-teal-600 group-hover:text-white transition-colors dark:bg-teal-950 dark:text-teal-400">
                     <Calendar className="h-5 w-5" />
                   </div>
-                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">Doctor Schedule</h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Explore visiting hours & chamber</p>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">Doctor Chamber</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Explore visiting hours & room</p>
                 </Link>
 
                 <Link
@@ -536,30 +771,36 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* 4. HOSPITAL KEY STATS BAR */}
-          <div className="mt-14 sm:mt-18 rounded-2xl border border-slate-200/80 bg-white/90 backdrop-blur-md p-6 sm:p-8 shadow-lg dark:border-slate-800 dark:bg-slate-900/80">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-slate-800">
-              {HOSPITAL_STATS.map((stat, idx) => (
-                <div key={idx} className={cn("text-center space-y-1", idx > 0 ? "pt-4 sm:pt-0" : "")}>
-                  <p className="text-3xl sm:text-4xl font-black text-teal-600 dark:text-teal-400 tracking-tight">
-                    {stat.value}
-                  </p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                    {stat.label}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {stat.sub}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* ========================================================================= */}
+      {/* SECTION 4: CLINICAL IMPACT & QUALITY METRICS BAR                           */}
+      {/* ========================================================================= */}
+      <section className="border-y border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 py-10">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-slate-800">
+            {HOSPITAL_STATS.map((stat, idx) => (
+              <div key={idx} className={cn("text-center space-y-1", idx > 0 ? "pt-4 sm:pt-0" : "")}>
+                <p className="text-3xl sm:text-4xl md:text-5xl font-black text-teal-600 dark:text-teal-400 tracking-tight">
+                  {stat.value}
+                </p>
+                <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
+                  {stat.label}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {stat.sub}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 5. CLINICAL CENTERS OF EXCELLENCE / DEPARTMENTS */}
-      <section id="departments" className="py-16 md:py-24 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800">
+      {/* ========================================================================= */}
+      {/* SECTION 5: SPECIALIZED CENTERS OF EXCELLENCE (DEPARTMENTS GRID)           */}
+      {/* ========================================================================= */}
+      <section id="departments" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950">
         <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -588,13 +829,13 @@ export default function HomePage() {
           </div>
 
           {/* Department Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {CLINICAL_DEPARTMENTS.map((dept, index) => {
               const Icon = dept.icon;
               return (
                 <div
                   key={index}
-                  className="rounded-2xl border border-slate-200 bg-slate-50/60 p-6 hover:bg-white hover:border-teal-500 hover:shadow-xl transition-all duration-300 group dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-850 flex flex-col justify-between"
+                  className="rounded-2xl border border-slate-200 bg-white p-6 hover:border-teal-500 hover:shadow-xl transition-all duration-300 group dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between"
                 >
                   <div className="space-y-4">
                     <div className="flex items-start justify-between">
@@ -614,9 +855,13 @@ export default function HomePage() {
                         {dept.description}
                       </p>
                     </div>
+
+                    <div className="rounded-lg bg-teal-50/60 p-2.5 text-[11px] font-medium text-teal-800 dark:bg-teal-950/50 dark:text-teal-300 border border-teal-100 dark:border-teal-900/40">
+                      ⚡ {dept.highlight}
+                    </div>
                   </div>
 
-                  <div className="pt-6 mt-4 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+                  <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                     <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
                       {dept.doctorsCount} Specialists Active
                     </span>
@@ -625,7 +870,7 @@ export default function HomePage() {
                       href={`/doctors?dept=${encodeURIComponent(dept.query)}`}
                       className="inline-flex items-center text-xs font-bold text-teal-600 hover:text-teal-700 dark:text-teal-400 group-hover:translate-x-1 transition-all"
                     >
-                      Book Specialist
+                      Book Serial
                       <ChevronRight className="ml-1 h-3.5 w-3.5" />
                     </Link>
                   </div>
@@ -636,38 +881,350 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. WHY CHOOSE MEDICORE - INFRASTRUCTURE & SAFETY */}
-      <section id="why-us" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800">
+      {/* ========================================================================= */}
+      {/* SECTION 6: 24/7 EMERGENCY & LEVEL-1 TRAUMA RESPONSE UNIT                   */}
+      {/* ========================================================================= */}
+      <section id="emergency-unit" className="py-16 md:py-20 bg-gradient-to-r from-rose-800 via-rose-700 to-red-900 text-white relative overflow-hidden">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-4 text-left">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-rose-100 border border-white/20">
+                <span className="h-2 w-2 rounded-full bg-white animate-ping" />
+                Round-the-Clock Critical Care & Trauma Command
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
+                Immediate Critical Resuscitation, When Every Second Counts.
+              </h2>
+
+              <p className="text-sm sm:text-base text-rose-100 max-w-3xl leading-relaxed">
+                MediCore Hospital operates a dedicated Level-1 Acute Trauma Center with specialized triage bays, rapid stroke thrombolysis teams, round-the-clock primary angioplasty, and an advanced mobile ICU ambulance fleet equipped with cardiac ventilators.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div className="rounded-xl bg-white/10 p-3.5 border border-white/10">
+                  <p className="text-2xl font-black">&lt; 45 Mins</p>
+                  <p className="text-xs text-rose-200 font-medium">Door-to-Balloon Primary Angioplasty</p>
+                </div>
+                <div className="rounded-xl bg-white/10 p-3.5 border border-white/10">
+                  <p className="text-2xl font-black">24/7 CT & MRI</p>
+                  <p className="text-xs text-rose-200 font-medium">Rapid Acute Stroke Brain Imaging</p>
+                </div>
+                <div className="rounded-xl bg-white/10 p-3.5 border border-white/10">
+                  <p className="text-2xl font-black">50 ICUs</p>
+                  <p className="text-xs text-rose-200 font-medium">Equipped with Smart Invasive Ventilators</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              <div className="rounded-2xl bg-white p-6 text-slate-900 shadow-2xl space-y-4">
+                <div className="space-y-1">
+                  <span className="text-xs font-bold text-rose-600 uppercase tracking-wider">Direct Dispatch Helpline</span>
+                  <p className="text-2xl font-black text-slate-900">Call Ambulance: 10666</p>
+                  <p className="text-xs text-slate-500">Available from any landline or mobile network across Bangladesh.</p>
+                </div>
+
+                <a
+                  href="tel:10666"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-3.5 text-base font-black text-white hover:bg-rose-700 transition-colors shadow-lg shadow-rose-600/30"
+                >
+                  <Phone className="h-5 w-5" />
+                  Call Emergency 10666
+                </a>
+
+                <a
+                  href="tel:+8809610010666"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  General Hospital Helpline: +880 9610-010666
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 7: PREVENTIVE HEALTH CHECKUP PACKAGES                             */}
+      {/* ========================================================================= */}
+      <section id="health-packages" className="py-16 md:py-24 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800">
         <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
-              Hospital Infrastructure & Patient Safety
+              Wellness & Proactive Diagnostics
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Why Patients Trust MediCore
+              Preventive Health Checkup Packages
             </h2>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-              Built in accordance with international healthcare building codes, stringent infection control measures, and real-time biometric patient monitoring.
+              Early diagnosis saves lives. Our comprehensive health screening packages are designed to identify risk factors before symptoms arise.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {HEALTH_PACKAGES.map((pkg) => (
+              <div
+                key={pkg.id}
+                className="rounded-2xl border border-slate-200 bg-slate-50/60 p-6 flex flex-col justify-between hover:bg-white hover:border-teal-500 hover:shadow-xl transition-all dark:border-slate-800 dark:bg-slate-900"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="rounded-full bg-teal-100 px-3 py-0.5 text-[11px] font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                      {pkg.tag}
+                    </span>
+                    <span className="text-xs font-medium text-slate-500">
+                      {pkg.testsCount} Tests
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                      {pkg.name}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                      {pkg.description}
+                    </p>
+                  </div>
+
+                  <div className="pt-2">
+                    <span className="text-xs text-slate-400 font-semibold uppercase">Package Price</span>
+                    <p className="text-2xl font-black text-slate-900 dark:text-slate-100">
+                      ৳{pkg.price.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2 border-t border-slate-200/80 dark:border-slate-800 pt-4 text-xs text-slate-600 dark:text-slate-300">
+                    <p className="font-bold text-slate-900 dark:text-slate-200 text-[11px] uppercase tracking-wider">Key Investigations:</p>
+                    {pkg.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-start gap-2">
+                        <Check className="h-3.5 w-3.5 text-teal-600 shrink-0 mt-0.5" />
+                        <span className="leading-snug">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-4 border-t border-slate-200/80 dark:border-slate-800">
+                  <Link
+                    href="/doctors"
+                    className={cn(
+                      buttonVariants({ size: "sm" }),
+                      "w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold"
+                    )}
+                  >
+                    Book Health Package
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 8: CUTTING-EDGE MEDICAL TECHNOLOGY & HOSPITAL INFRASTRUCTURE      */}
+      {/* ========================================================================= */}
+      <section id="technology" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+              Pioneering Clinical Infrastructure
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Advanced Medical Technology & Robotics
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+              Precision matters in clinical outcomes. MediCore invests in the highest tier of diagnostic radiological and surgical innovations available worldwide.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {HOSPITAL_FEATURES.map((feature, i) => {
-              const Icon = feature.icon;
+            {HOSPITAL_TECHNOLOGIES.map((tech, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition-all dark:border-slate-800 dark:bg-slate-900 space-y-4 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                      {tech.category}
+                    </span>
+                    <Badge variant="outline" className="text-[10px] border-slate-200 dark:border-slate-700">
+                      {tech.badge}
+                    </Badge>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    {tech.name}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {tech.desc}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                  <span>Certified High Precision</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 9: FEATURED SENIOR SPECIALIST PHYSICIANS                          */}
+      {/* ========================================================================= */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2 max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                Senior Medical Board
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Featured Specialist Physicians
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+                Consult with renowned professors, surgeons, and physicians with international fellowships and decades of clinical expertise.
+              </p>
+            </div>
+
+            <Link
+              href="/doctors"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "border-slate-300 text-teal-700 hover:bg-teal-50 self-start md:self-auto font-semibold dark:border-slate-700 dark:text-teal-300"
+              )}
+            >
+              Browse Full Roster
+              <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {FEATURED_DOCTORS.map((doc, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 bg-slate-50/50 p-6 flex flex-col justify-between hover:bg-white hover:border-teal-500 hover:shadow-xl transition-all dark:border-slate-800 dark:bg-slate-900 space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+                      {doc.name}
+                    </h3>
+                    <p className="text-xs font-semibold text-teal-700 dark:text-teal-400">
+                      {doc.dept}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200/80 dark:border-slate-800 pt-2 font-medium">
+                    {doc.qual}
+                  </p>
+
+                  <div className="rounded-xl bg-white p-3 text-xs space-y-1.5 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60">
+                    <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
+                      <MapPin className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+                      <span className="line-clamp-1">{doc.chamber}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+                      <Clock className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+                      <span>{doc.time}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold">Visiting Fee</span>
+                    <p className="text-base font-black text-slate-900 dark:text-white">
+                      ৳{doc.fee.toLocaleString()}
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/login"
+                    className={cn(
+                      buttonVariants({ size: "sm" }),
+                      "bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs"
+                    )}
+                  >
+                    Book Serial
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 10: STEP-BY-STEP PATIENT CARE JOURNEY                             */}
+      {/* ========================================================================= */}
+      <section id="patient-care" className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+              Seamless Healthcare Experience
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Your 4-Step Patient Care Journey
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+              From choosing your specialist to obtaining your digital prescription and test results—MediCore makes hospitalization and doctor visits hassle-free.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              {
+                step: "01",
+                title: "Select Specialist Physician",
+                desc: "Filter by department, medical condition, or doctor qualifications in our public registry.",
+                icon: Stethoscope,
+              },
+              {
+                step: "02",
+                title: "Choose Date & Time Slot",
+                desc: "Check available visiting days and select a convenient consultation chamber slot.",
+                icon: Calendar,
+              },
+              {
+                step: "03",
+                title: "Instant Serial Confirmation",
+                desc: "Receive real-time token number, room details, and SMS confirmation without waiting in lines.",
+                icon: FileCheck,
+              },
+              {
+                step: "04",
+                title: "Digital Records & Follow-up",
+                desc: "Access your e-prescriptions, lab test PDF reports, and billing receipts from any device.",
+                icon: HeartPulse,
+              },
+            ].map((st, i) => {
+              const Icon = st.icon;
               return (
                 <div
                   key={i}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm hover:shadow-lg transition-all dark:border-slate-800 dark:bg-slate-900 space-y-3"
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900 space-y-4 relative overflow-hidden"
                 >
-                  <div className="h-10 w-10 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">
-                    <Icon className="h-5 w-5" />
+                  <span className="text-5xl font-black text-slate-100 dark:text-slate-800 absolute right-4 top-4 select-none">
+                    {st.step}
+                  </span>
+                  <div className="h-12 w-12 rounded-xl bg-teal-600/10 text-teal-600 flex items-center justify-center dark:bg-teal-500/10 dark:text-teal-400 relative z-10">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {feature.description}
-                  </p>
+                  <div className="space-y-1 relative z-10">
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white">
+                      {st.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {st.desc}
+                    </p>
+                  </div>
                 </div>
               );
             })}
@@ -675,44 +1232,53 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. EMERGENCY CALLOUT BANNER */}
-      <section id="emergency" className="py-12 bg-gradient-to-r from-rose-700 via-rose-600 to-red-800 text-white">
-        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-0.5 text-xs font-bold uppercase tracking-wider">
-              <span className="h-2 w-2 rounded-full bg-white animate-ping" />
-              Round-The-Clock Critical Care
+      {/* ========================================================================= */}
+      {/* SECTION 11: INTERNATIONAL & OUTSTATION PATIENT CARE CENTER               */}
+      {/* ========================================================================= */}
+      <section className="py-16 md:py-20 bg-teal-900 text-white relative overflow-hidden">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-teal-800/80 px-3.5 py-1 text-xs font-semibold text-teal-200 border border-teal-700">
+                <Globe className="h-3.5 w-3.5" />
+                <span>Dedicated Outstation & International Patient Helpdesk</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                Traveling to Dhaka for Medical Treatment?
+              </h2>
+              <p className="text-sm sm:text-base text-teal-100 max-w-2xl leading-relaxed">
+                Our International Patient Services team provides complete end-to-end assistance: tele-consultation before travel, airport ambulance reception, dedicated guest liaison officers, multi-language support, and discounted accommodation arrangements.
+              </p>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-black">
-              Experiencing a Medical Emergency?
-            </h3>
-            <p className="text-sm text-rose-100 max-w-xl">
-              Call our dedicated emergency ambulance command center immediately for critical care trauma response and stroke resuscitation.
-            </p>
-          </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="tel:10666"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-base font-black text-rose-700 shadow-xl hover:bg-rose-50 transition-colors"
-            >
-              <Phone className="h-5 w-5 text-rose-600" />
-              Call Emergency 10666
-            </a>
-            <Link
-              href="/doctors"
-              className="inline-flex items-center gap-2 rounded-xl border-2 border-white/80 px-5 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors"
-            >
-              Browse Doctor Chamber
-            </Link>
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              <div className="rounded-2xl bg-teal-800/60 p-6 border border-teal-700/60 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-teal-300">International Coordinator</p>
+                <p className="text-xl font-bold">+880 1711-000000</p>
+                <p className="text-xs text-teal-200">Email: international@medicore-hospitals.com</p>
+                <div className="pt-2">
+                  <Link
+                    href="/doctors"
+                    className={cn(
+                      buttonVariants({ size: "sm" }),
+                      "w-full bg-white hover:bg-teal-50 text-teal-900 font-bold"
+                    )}
+                  >
+                    Request Medical Travel Assistance
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 8. PATIENT STORIES & REVIEWS */}
+      {/* ========================================================================= */}
+      {/* SECTION 12: VERIFIED PATIENT RECOVERY STORIES & TESTIMONIALS              */}
+      {/* ========================================================================= */}
       <section id="testimonials" className="py-16 md:py-24 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800">
         <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
               Verified Clinical Outcomes
             </span>
@@ -746,7 +1312,7 @@ export default function HomePage() {
                     {review.author}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {review.relation} • <span className="text-teal-600 dark:text-teal-400 font-medium">{review.department}</span>
+                    {review.relation} • <span className="text-teal-600 dark:text-teal-400 font-medium">{review.dept}</span>
                   </p>
                 </div>
               </div>
@@ -755,11 +1321,156 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. REAL HOSPITAL COMPREHENSIVE FOOTER */}
+      {/* ========================================================================= */}
+      {/* SECTION 13: HOSPITAL NEWS, HEALTH ARTICLES & MEDICAL NOTICES              */}
+      {/* ========================================================================= */}
+      <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2 max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+                Hospital Bulletins & Health Updates
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Latest Clinical Updates & News
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+                Stay updated with breakthroughs in our treatment programs, medical equipment additions, and hospital community camps.
+              </p>
+            </div>
+
+            <Link
+              href="/doctors"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "border-slate-300 font-semibold self-start md:self-auto text-xs"
+              )}
+            >
+              View All Notices
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {HOSPITAL_NEWS.map((news, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-900 space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="rounded-md bg-teal-50 px-2 py-0.5 font-bold text-teal-700 dark:bg-teal-950 dark:text-teal-300">
+                      {news.category}
+                    </span>
+                    <span className="text-slate-400">{news.date}</span>
+                  </div>
+
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white leading-snug">
+                    {news.title}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {news.summary}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <span className="text-xs font-bold text-teal-600 hover:text-teal-700 inline-flex items-center gap-1">
+                    Read Clinical Bulletin <ChevronRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 14: FREQUENTLY ASKED QUESTIONS (FAQ ACCORDION)                     */}
+      {/* ========================================================================= */}
+      <section id="faq" className="py-16 md:py-24 bg-white dark:bg-slate-900/60 border-t border-slate-200/80 dark:border-slate-800">
+        <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+              Clear Answers for Patients & Families
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+              Got queries regarding appointments, insurance, ambulance, or online reports? Here are answers to common questions.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-3">
+            {FAQ_ITEMS.map((item, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 bg-slate-50/50 overflow-hidden transition-all dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <button
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-slate-900 dark:text-white hover:text-teal-600 transition-colors"
+                  >
+                    <span>{item.q}</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-5 w-5 text-slate-400 transition-transform duration-200 shrink-0 ml-4",
+                        isOpen ? "rotate-180 text-teal-600" : ""
+                      )}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200/60 dark:border-slate-800">
+                      {item.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 15: HOSPITAL CAMPUS, 24/7 CONTACT & COMPREHENSIVE FOOTER          */}
+      {/* ========================================================================= */}
       <footer className="border-t border-slate-200 bg-slate-900 text-slate-300 pt-16 pb-12 dark:border-slate-800 dark:bg-slate-950">
         <div className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 space-y-12">
+          {/* Top Campus Address Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8 border-b border-slate-800">
+            <div className="rounded-2xl bg-slate-800/80 p-6 border border-slate-700/60 space-y-2">
+              <div className="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <Building2 className="h-4 w-4" />
+                <span>Dhaka Main Hospital Campus (Tertiary Center)</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Plot 81, Block E, Bashundhara R/A, Dhaka-1229, Bangladesh
+              </p>
+              <p className="text-xs text-slate-400">
+                Emergency 24/7: <a href="tel:10666" className="text-white font-bold hover:underline">10666</a> | Helpline: +880 9610-010666
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-slate-800/80 p-6 border border-slate-700/60 space-y-2">
+              <div className="flex items-center gap-2 text-teal-400 font-bold text-sm">
+                <Building2 className="h-4 w-4" />
+                <span>Chattogram Diagnostic & Day-Care Center</span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Holding 44, GEC Circle, Nasirabad, Chattogram-4000
+              </p>
+              <p className="text-xs text-slate-400">
+                Direct Appointment: +880 9610-010777
+              </p>
+            </div>
+          </div>
+
+          {/* Links Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Col 1: Brand & Bio */}
+            {/* Col 1 */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md">
@@ -787,7 +1498,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Col 2: Clinical Departments */}
+            {/* Col 2 */}
             <div className="space-y-3">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Clinical Centers</h4>
               <ul className="space-y-2 text-xs text-slate-400">
@@ -800,20 +1511,20 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* Col 3: Patients & Visitors */}
+            {/* Col 3 */}
             <div className="space-y-3">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Patient Care</h4>
               <ul className="space-y-2 text-xs text-slate-400">
-                <li><Link href="/doctors" className="hover:text-teal-300">Book Doctor Appointment</Link></li>
+                <li><Link href="/doctors" className="hover:text-teal-300">Book Doctor Serial</Link></li>
                 <li><Link href="/login" className="hover:text-teal-300">Patient Portal Sign In</Link></li>
                 <li><Link href="/register" className="hover:text-teal-300">Online Patient Registration</Link></li>
-                <li><a href="#emergency" className="hover:text-teal-300">24/7 Ambulance Service</a></li>
-                <li><span className="text-slate-500">Corporate Health Checkups</span></li>
+                <li><a href="#health-packages" className="hover:text-teal-300">Health Checkup Packages</a></li>
+                <li><a href="#emergency-unit" className="hover:text-teal-300">24/7 Ambulance Service</a></li>
                 <li><span className="text-slate-500">Hospital Visitor Guidelines</span></li>
               </ul>
             </div>
 
-            {/* Col 4: Quality & Accreditation */}
+            {/* Col 4 */}
             <div className="space-y-3">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Quality Accreditations</h4>
               <div className="space-y-2 text-xs text-slate-400">
