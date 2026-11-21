@@ -36,10 +36,20 @@ export default function HomePage() {
           </Link>
 
           <Link
-            href="/register"
+            href="/doctors"
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
-              "w-full sm:w-auto border-slate-300 dark:border-slate-800"
+              "w-full sm:w-auto border-teal-600/30 text-teal-700 hover:bg-teal-50 dark:text-teal-400 dark:border-teal-700"
+            )}
+          >
+            Find Specialist Doctors
+          </Link>
+
+          <Link
+            href="/register"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "lg" }),
+              "w-full sm:w-auto text-slate-600 dark:text-slate-400"
             )}
           >
             Patient Registration

@@ -42,3 +42,5 @@ export interface AuthResponseData {
   user: UserSession;
   token: string;
 }
+
+export * from "./doctor";

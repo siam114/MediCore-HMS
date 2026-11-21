@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { isDbConnected, getDb } from "../config/db";
 import authRoutes from "./auth.routes";
+import doctorRoutes from "./doctor.routes";
 
 const router = Router();
 
@@ -27,5 +28,8 @@ router.get("/health", async (_req, res) => {
 
 // Authentication routes
 router.use("/auth", authRoutes);
+
+// Doctor management routes
+router.use("/doctors", doctorRoutes);
 
 export default router;
