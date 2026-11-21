@@ -36,6 +36,14 @@ const DEPARTMENTS = [
   "Dermatology",
   "General Medicine",
   "General Surgery",
+  "Gynecology & Obstetrics",
+  "Nephrology",
+  "Oncology",
+  "Gastroenterology",
+  "Urology",
+  "Ophthalmology",
+  "ENT (Ear, Nose, Throat)",
+  "Psychiatry",
 ];
 
 function DoctorsDirectoryContent() {

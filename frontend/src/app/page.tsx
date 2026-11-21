@@ -231,7 +231,7 @@ const HOSPITAL_TECHNOLOGIES = [
 // 5. Featured Specialists
 const FEATURED_DOCTORS = [
   {
-    name: "Dr. Siam Ahmed",
+    name: "Dr. SM Siam",
     dept: "Cardiology & Interventional Care",
     qual: "MBBS, FCPS (Cardiology), FACC (USA)",
     chamber: "Chamber #402, Block B (4th Floor)",
