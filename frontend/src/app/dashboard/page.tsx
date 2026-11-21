@@ -216,11 +216,11 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50/60 dark:bg-slate-950">
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="w-full max-w-[1640px] mx-auto flex h-18 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-md shadow-teal-600/30">
-              <Activity className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30">
+              <Activity className="h-6 w-6" />
             </div>
             <div>
               <span className="font-bold text-slate-900 dark:text-slate-100">MediCore HMS</span>
@@ -259,7 +259,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 sm:px-6 max-w-5xl space-y-6">
+      <main className="w-full max-w-[1640px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 py-8 space-y-8">
         {/* Welcome Banner */}
         <div className="rounded-2xl border border-teal-200/80 bg-gradient-to-r from-teal-500/10 via-emerald-500/5 to-transparent p-6 dark:border-teal-900/40">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
