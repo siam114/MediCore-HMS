@@ -154,71 +154,78 @@ function DoctorsDirectoryContent() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
           {doctors.map((doctor) => (
             <Card
               key={doctor.id}
-              className="overflow-hidden border border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-teal-500/60 transition-all duration-300 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between rounded-2xl"
+              className="overflow-hidden border border-slate-200/90 bg-white shadow-sm hover:shadow-xl hover:border-teal-500/60 transition-all duration-300 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between rounded-2xl"
             >
               <CardContent className="p-6 space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 line-clamp-1">
-                      {doctor.name}
-                    </h3>
-                    <p className="text-xs font-semibold text-teal-700 dark:text-teal-400 line-clamp-1">
-                      {doctor.specialization}
-                    </p>
-                  </div>
-                  <Badge variant="doctor" className="shrink-0">{doctor.department}</Badge>
+                {/* Department & Experience Pill Row */}
+                <div className="flex items-center justify-between gap-2">
+                  <Badge variant="doctor" className="text-xs px-2.5 py-0.5">
+                    {doctor.department}
+                  </Badge>
+                  <span className="text-[11px] font-semibold text-slate-400 shrink-0">
+                    {doctor.experienceYears}+ Yrs Exp
+                  </span>
                 </div>
 
-                {/* Qualifications & Chamber */}
+                {/* Doctor Name & Specialization - Full text, NO line-clamp */}
+                <div className="space-y-1">
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100 leading-snug">
+                    {doctor.name}
+                  </h3>
+                  <p className="text-xs font-semibold text-teal-700 dark:text-teal-400 leading-relaxed">
+                    {doctor.specialization}
+                  </p>
+                </div>
+
+                {/* Qualifications & Chamber - Clean multi-line wrapping */}
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3">
-                  <div className="flex items-center gap-2">
-                    <Award className="h-3.5 w-3.5 text-teal-600 shrink-0" />
-                    <span className="line-clamp-1 font-medium">{doctor.qualification}</span>
+                  <div className="flex items-start gap-2">
+                    <Award className="h-4 w-4 text-teal-600 shrink-0 mt-0.5" />
+                    <span className="font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {doctor.qualification}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Stethoscope className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                    <span>{doctor.experienceYears} Years Clinical Experience</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">{doctor.roomNumber}</span>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+                      {doctor.roomNumber}
+                    </span>
                   </div>
                 </div>
 
                 {/* Visiting Schedule */}
-                <div className="rounded-xl bg-slate-50 p-3 text-xs space-y-2 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                <div className="rounded-xl bg-slate-50 p-3.5 text-xs space-y-2 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-300">
                     <Calendar className="h-3.5 w-3.5 text-teal-600" />
                     <span>Visiting Days:</span>
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {doctor.availableDays.map((day) => (
                       <span
                         key={day}
-                        className="rounded-md bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-700 border border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800"
+                        className="rounded-md bg-white px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 shadow-2xs"
                       >
                         {day.slice(0, 3)}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 pt-0.5 font-medium">
-                    <Clock className="h-3.5 w-3.5 text-teal-600" />
+                  <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 pt-0.5 font-medium">
+                    <Clock className="h-3.5 w-3.5 text-teal-600 shrink-0" />
                     <span>
-                      {doctor.availableTime.start} - {doctor.availableTime.end}
+                      {doctor.availableTime.start} – {doctor.availableTime.end}
                     </span>
                   </div>
                 </div>
 
                 {/* Fee & Action */}
-                <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
-                  <div>
+                <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800 gap-3">
+                  <div className="shrink-0">
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Fee</span>
-                    <p className="text-base font-black text-slate-900 dark:text-slate-100">
+                    <p className="text-lg font-black text-slate-900 dark:text-slate-100">
                       ৳{doctor.consultationFee.toLocaleString()}
                     </p>
                   </div>
@@ -227,7 +234,7 @@ function DoctorsDirectoryContent() {
                     href="/login"
                     className={cn(
                       buttonVariants({ size: "sm" }),
-                      "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm"
+                      "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm shrink-0 whitespace-nowrap"
                     )}
                   >
                     Book Serial

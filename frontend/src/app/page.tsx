@@ -1136,9 +1136,9 @@ export default function HomePage() {
                   </p>
 
                   <div className="rounded-xl bg-white p-3 text-xs space-y-1.5 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
-                      <MapPin className="h-3.5 w-3.5 text-teal-600 shrink-0" />
-                      <span className="line-clamp-1">{doc.chamber}</span>
+                    <div className="flex items-start gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
+                      <MapPin className="h-3.5 w-3.5 text-teal-600 shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">{doc.chamber}</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
                       <Clock className="h-3.5 w-3.5 text-teal-600 shrink-0" />
