@@ -416,107 +416,107 @@ export default function HomePage() {
       {/* SECTION 2: STICKY HOSPITAL MAIN NAVIGATION                                */}
       {/* ========================================================================= */}
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-xs dark:border-slate-800 dark:bg-slate-900/95">
-        <div className="w-full max-w-[1640px] mx-auto flex h-20 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
+        <div className="w-full max-w-[1640px] mx-auto flex h-18 sm:h-20 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 gap-3">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-all">
-              <Activity className="h-7 w-7" />
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-all shrink-0">
+              <Activity className="h-6 w-6 sm:h-7 sm:w-7" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-lg sm:text-xl 2xl:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50 font-sans">
                   MediCore
                 </span>
-                <span className="rounded-md bg-teal-50 px-1.5 py-0.5 text-[10px] font-bold text-teal-700 border border-teal-200 dark:bg-teal-950 dark:border-teal-800 dark:text-teal-300">
+                <span className="rounded-md bg-teal-50 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-teal-700 border border-teal-200 dark:bg-teal-950 dark:border-teal-800 dark:text-teal-300">
                   HOSPITALS
                 </span>
               </div>
-              <span className="text-[11px] font-medium text-slate-500 tracking-wide dark:text-slate-400">
-                Tertiary Care & Specialist Research Center
+              <span className="hidden sm:block text-[10px] sm:text-[11px] font-medium text-slate-500 tracking-wide dark:text-slate-400">
+                Tertiary Care & Research Center
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden xl:flex items-center gap-1 2xl:gap-2">
+          {/* Desktop Nav - Clean, single-line, zero text-wrapping */}
+          <nav className="hidden xl:flex items-center gap-1 2xl:gap-2 shrink-0">
             <Link
               href="/doctors"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400 whitespace-nowrap"
             >
-              Find Specialist Doctors
+              Find Doctors
             </Link>
             <a
               href="#departments"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400 whitespace-nowrap"
             >
-              Clinical Specialties
+              Specialties
             </a>
             <a
               href="#health-packages"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400 whitespace-nowrap"
             >
-              Health Checkups
+              Health Packages
             </a>
             <a
               href="#technology"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400 whitespace-nowrap"
             >
-              Technology & OTs
+              Technology
             </a>
             <a
               href="#emergency-unit"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-rose-700 hover:text-rose-800 hover:bg-rose-50/70 rounded-lg transition-all dark:text-rose-400 dark:hover:bg-rose-950/40 whitespace-nowrap"
             >
-              24/7 Trauma & Emergency
+              24/7 Emergency
             </a>
             <a
               href="#patient-care"
-              className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400"
+              className="px-2.5 2xl:px-3.5 py-2 text-xs 2xl:text-sm font-semibold text-slate-700 hover:text-teal-600 hover:bg-teal-50/70 rounded-lg transition-all dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-400 whitespace-nowrap"
             >
               Patient Guide
             </a>
           </nav>
 
-          {/* Right Actions */}
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <a
               href="tel:10666"
-              className="hidden lg:inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 border border-rose-200 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-300 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-2.5 sm:px-3 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-100 border border-rose-200 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-300 transition-colors whitespace-nowrap"
             >
-              <Ambulance className="h-4 w-4 text-rose-600 animate-pulse" />
-              <span>Ambulance 10666</span>
+              <Ambulance className="h-3.5 w-3.5 text-rose-600 animate-pulse" />
+              <span>10666</span>
             </a>
 
             <Link
               href="/login"
               className={cn(
                 buttonVariants({ variant: "outline", size: "sm" }),
-                "border-slate-300 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200"
+                "hidden md:inline-flex border-slate-300 font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 text-xs px-3 h-9 whitespace-nowrap"
               )}
             >
-              Portal Sign In
+              Sign In
             </Link>
 
             <Link
               href="/doctors"
               className={cn(
                 buttonVariants({ size: "sm" }),
-                "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-md shadow-teal-600/20"
+                "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-md shadow-teal-600/20 text-xs px-3.5 h-9 whitespace-nowrap"
               )}
             >
               Book Serial
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Link>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-            aria-label="Toggle Menu"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            {/* Mobile / Tablet Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="xl:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 ml-1"
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
