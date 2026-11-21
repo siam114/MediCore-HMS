@@ -260,13 +260,19 @@ export default function DoctorsDirectoryPage() {
       {/* Main Header */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95">
         <div className="w-full max-w-[1640px] mx-auto flex h-20 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30">
+          <Link
+            href="/"
+            title="Back to MediCore Homepage"
+            className="flex items-center gap-3 group cursor-pointer hover:opacity-90 transition-opacity"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors">
               <Activity className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-black text-slate-900 dark:text-white">MediCore</span>
+                <span className="text-xl font-black text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                  MediCore
+                </span>
                 <span className="rounded bg-teal-50 px-1.5 py-0.5 text-[10px] font-bold text-teal-700 border border-teal-200 dark:bg-teal-950 dark:border-teal-800 dark:text-teal-300">
                   DOCTORS
                 </span>

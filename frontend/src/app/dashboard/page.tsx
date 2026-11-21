@@ -218,17 +218,23 @@ export default function DashboardPage() {
       {/* Top Navigation Bar */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
         <div className="w-full max-w-[1640px] mx-auto flex h-18 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30">
+          <Link
+            href="/"
+            title="Back to MediCore Homepage"
+            className="flex items-center gap-2.5 group cursor-pointer hover:opacity-90 transition-opacity"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors">
               <Activity className="h-6 w-6" />
             </div>
             <div>
-              <span className="font-bold text-slate-900 dark:text-slate-100">MediCore HMS</span>
+              <span className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                MediCore HMS
+              </span>
               <span className="ml-2 text-xs text-slate-400">
                 {user.role === "ADMIN" ? "Admin Control Center" : "Hospital Portal"}
               </span>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
             <Link

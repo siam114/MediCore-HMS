@@ -418,7 +418,17 @@ export default function HomePage() {
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-xs dark:border-slate-800 dark:bg-slate-900/95">
         <div className="w-full max-w-[1640px] mx-auto flex h-18 sm:h-20 items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 gap-3">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+          <Link
+            href="/"
+            onClick={(e) => {
+              if (typeof window !== "undefined" && window.location.pathname === "/") {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            className="flex items-center gap-2.5 sm:gap-3 group shrink-0 cursor-pointer"
+            title="MediCore Hospitals - Back to Top / Home"
+          >
             <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-all shrink-0">
               <Activity className="h-6 w-6 sm:h-7 sm:w-7" />
             </div>

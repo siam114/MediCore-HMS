@@ -112,17 +112,21 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-teal-50/20 to-sky-50/30 p-4 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30">
+        <Link
+          href="/"
+          title="Back to MediCore Homepage"
+          className="block text-center space-y-2 group cursor-pointer hover:opacity-95 transition-opacity"
+        >
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-colors">
             <Activity className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
             MediCore HMS
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
             Hospital Management System Portal
           </p>
-        </div>
+        </Link>
 
         {/* Login Card */}
         <Card className="border-slate-200/80 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:shadow-none">
