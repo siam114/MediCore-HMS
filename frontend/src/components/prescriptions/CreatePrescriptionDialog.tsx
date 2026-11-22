@@ -376,10 +376,10 @@ export function CreatePrescriptionDialog({
               {medicines.map((med, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-12 gap-2 items-center rounded-xl border border-slate-200 p-2.5 bg-white dark:border-slate-800 dark:bg-slate-900/60 shadow-xs"
+                  className="grid grid-cols-12 gap-2 sm:gap-2.5 items-center rounded-xl border border-slate-200 p-3 sm:p-3.5 bg-white dark:border-slate-800 dark:bg-slate-900/60 shadow-xs"
                 >
                   <div className="col-span-12 sm:col-span-4 space-y-1">
-                    <Label className="text-[11px] text-slate-500">Medicine & Strength *</Label>
+                    <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Medicine & Strength *</Label>
                     <Input
                       placeholder="e.g. Tab. Amlodipine 5mg"
                       value={med.name}
@@ -387,8 +387,8 @@ export function CreatePrescriptionDialog({
                       required
                     />
                   </div>
-                  <div className="col-span-4 sm:col-span-2 space-y-1">
-                    <Label className="text-[11px] text-slate-500">Dosage *</Label>
+                  <div className="col-span-6 sm:col-span-2 space-y-1">
+                    <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Dosage *</Label>
                     <Input
                       placeholder="e.g. 1+0+1"
                       value={med.dosage}
@@ -396,8 +396,8 @@ export function CreatePrescriptionDialog({
                       required
                     />
                   </div>
-                  <div className="col-span-4 sm:col-span-2 space-y-1">
-                    <Label className="text-[11px] text-slate-500">Duration *</Label>
+                  <div className="col-span-6 sm:col-span-2 space-y-1">
+                    <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Duration *</Label>
                     <Input
                       placeholder="e.g. 14 Days"
                       value={med.duration}
@@ -405,19 +405,19 @@ export function CreatePrescriptionDialog({
                       required
                     />
                   </div>
-                  <div className="col-span-3 sm:col-span-3 space-y-1">
-                    <Label className="text-[11px] text-slate-500">Instructions</Label>
+                  <div className="col-span-10 sm:col-span-3 space-y-1">
+                    <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Instructions</Label>
                     <Input
                       placeholder="e.g. After meal"
                       value={med.instruction}
                       onChange={(e) => handleMedicineChange(index, "instruction", e.target.value)}
                     />
                   </div>
-                  <div className="col-span-1 flex justify-end pt-5">
+                  <div className="col-span-2 sm:col-span-1 flex justify-end pt-5">
                     <button
                       type="button"
                       onClick={() => handleRemoveMedicine(index)}
-                      className="rounded-md p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40"
+                      className="rounded-lg p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 cursor-pointer transition-colors"
                       title="Remove medicine"
                     >
                       <Trash2 className="h-4 w-4" />

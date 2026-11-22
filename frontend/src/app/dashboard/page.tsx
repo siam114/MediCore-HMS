@@ -1067,10 +1067,10 @@ export default function DashboardPage() {
                           <Button
                             size="sm"
                             onClick={() => handleOpenViewRx(rx)}
-                            className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold"
+                            className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold cursor-pointer"
                           >
                             <FileText className="h-3 w-3" />
-                            View & Print Rx
+                            View / Download PDF
                           </Button>
                         </td>
                       </tr>
