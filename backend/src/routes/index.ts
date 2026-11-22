@@ -4,6 +4,7 @@ import authRoutes from "./auth.routes";
 import doctorRoutes from "./doctor.routes";
 import appointmentRoutes from "./appointment.routes";
 import prescriptionRoutes from "./prescription.routes";
+import labReportRoutes from "./labReport.routes";
 
 const router = Router();
 
@@ -39,5 +40,8 @@ router.use("/appointments", appointmentRoutes);
 
 // Doctor Consultation & Digital Prescription routes
 router.use("/prescriptions", prescriptionRoutes);
+
+// Diagnostic & Laboratory Test Report routes
+router.use("/lab-reports", labReportRoutes);
 
 export default router;

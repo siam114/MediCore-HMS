@@ -34,10 +34,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
-import { authService, doctorService, appointmentService, prescriptionService } from "@/services/api";
-import type { UserSession, Doctor, Appointment, Prescription } from "@/types";
+import { authService, doctorService, appointmentService, prescriptionService, labReportService } from "@/services/api";
+import type { UserSession, Doctor, Appointment, Prescription, LabReport } from "@/types";
 import { CreatePrescriptionDialog } from "@/components/prescriptions/CreatePrescriptionDialog";
 import { ViewPrescriptionDialog } from "@/components/prescriptions/ViewPrescriptionDialog";
+import { CreateLabReportDialog } from "@/components/labReports/CreateLabReportDialog";
+import { ViewLabReportDialog } from "@/components/labReports/ViewLabReportDialog";
+import { FlaskConical } from "lucide-react";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -48,18 +51,25 @@ export default function DashboardPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+  const [labReports, setLabReports] = useState<LabReport[]>([]);
   const [currentDoctor, setCurrentDoctor] = useState<Doctor | null>(null);
 
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [isDoctorsLoading, setIsDoctorsLoading] = useState(false);
   const [isAppointmentsLoading, setIsAppointmentsLoading] = useState(false);
   const [isPrescriptionsLoading, setIsPrescriptionsLoading] = useState(false);
+  const [isLabReportsLoading, setIsLabReportsLoading] = useState(false);
 
   // Prescription dialog states
   const [showCreateRxModal, setShowCreateRxModal] = useState(false);
   const [showViewRxModal, setShowViewRxModal] = useState(false);
   const [selectedAppointmentForRx, setSelectedAppointmentForRx] = useState<Appointment | null>(null);
   const [selectedPrescriptionForView, setSelectedPrescriptionForView] = useState<Prescription | null>(null);
+
+  // Lab Report dialog states
+  const [showCreateLabReportModal, setShowCreateLabReportModal] = useState(false);
+  const [showViewLabReportModal, setShowViewLabReportModal] = useState(false);
+  const [selectedLabReportForView, setSelectedLabReportForView] = useState<LabReport | null>(null);
 
   // Add Doctor Form state
   const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
@@ -126,6 +136,15 @@ export default function DashboardPage() {
           }
         })
         .catch(console.error);
+
+      labReportService
+        .getAll()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setLabReports(res.data.reports);
+          }
+        })
+        .catch(console.error);
     } else if (user?.role === "DOCTOR") {
       doctorService
         .getMyProfile()
@@ -153,6 +172,16 @@ export default function DashboardPage() {
                 }
               })
               .catch(console.error);
+
+            // Fetch diagnostic lab reports for this doctor
+            labReportService
+              .getByDoctor(doc.id)
+              .then((labRes) => {
+                if (isSubscribed && labRes.success && labRes.data) {
+                  setLabReports(labRes.data.reports);
+                }
+              })
+              .catch(console.error);
           }
         })
         .catch(console.error);
@@ -171,6 +200,15 @@ export default function DashboardPage() {
         .then((res) => {
           if (isSubscribed && res.success && res.data) {
             setPrescriptions(res.data.prescriptions);
+          }
+        })
+        .catch(console.error);
+
+      labReportService
+        .getMy()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setLabReports(res.data.reports);
           }
         })
         .catch(console.error);
@@ -199,6 +237,21 @@ export default function DashboardPage() {
     }
     setSelectedPrescriptionForView(newRx);
     setShowViewRxModal(true);
+  };
+
+  const handleOpenViewLabReport = (report: LabReport) => {
+    setSelectedLabReportForView(report);
+    setShowViewLabReportModal(true);
+  };
+
+  const handleLabReportCreated = () => {
+    if (user?.role === "ADMIN") {
+      labReportService.getAll().then((res) => res.success && res.data && setLabReports(res.data.reports));
+    } else if (user?.role === "DOCTOR" && currentDoctor) {
+      labReportService.getByDoctor(currentDoctor.id).then((res) => res.success && res.data && setLabReports(res.data.reports));
+    } else {
+      labReportService.getMy().then((res) => res.success && res.data && setLabReports(res.data.reports));
+    }
   };
 
   const handleUpdateAppointmentStatus = async (id: string, newStatus: string) => {
@@ -1082,6 +1135,121 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Diagnostic Laboratory & Pathology Reports Section */}
+        <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FlaskConical className="h-5 w-5 text-teal-600" />
+                {user.role === "DOCTOR"
+                  ? "Diagnostic Laboratory & Pathology Reports (EHR)"
+                  : user.role === "PATIENT"
+                  ? "My Diagnostic Laboratory & Pathology Test Reports"
+                  : "Hospital Diagnostic Laboratory & Pathology Registry"}
+              </CardTitle>
+              <CardDescription>
+                {user.role === "DOCTOR"
+                  ? "Verified pathology test results with reference intervals, abnormal flags, and official PDF reports"
+                  : user.role === "PATIENT"
+                  ? "Official pathology test findings with biological reference intervals and downloadable PDF"
+                  : "Central laboratory reports repository across clinical diagnostic disciplines"}
+              </CardDescription>
+            </div>
+            {(user.role === "DOCTOR" || user.role === "ADMIN" || user.role === "STAFF") && (
+              <Button
+                size="sm"
+                onClick={() => setShowCreateLabReportModal(true)}
+                className="bg-teal-600 hover:bg-teal-700 text-white text-xs gap-1.5 shadow-sm h-9 px-4 rounded-xl font-bold cursor-pointer transition-all hover:scale-[1.02]"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                New Lab Test Report
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent>
+            {labReports.length === 0 ? (
+              <div className="text-center py-10 space-y-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg">
+                <FlaskConical className="h-8 w-8 text-slate-300 mx-auto" />
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  No diagnostic laboratory reports found.
+                </p>
+                <p className="text-xs text-slate-400">
+                  Diagnostic lab test results will appear here with instant print & vector PDF download.
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-slate-100 dark:border-slate-800">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase dark:bg-slate-900/60 dark:text-slate-400">
+                    <tr>
+                      <th className="px-4 py-3">Report #</th>
+                      <th className="px-4 py-3">Test Name & Category</th>
+                      <th className="px-4 py-3">Patient Name</th>
+                      {user.role !== "DOCTOR" && <th className="px-4 py-3">Referred By</th>}
+                      <th className="px-4 py-3">Specimen</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Date</th>
+                      <th className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                    {labReports.map((report) => (
+                      <tr key={report.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                        <td className="px-4 py-3 font-mono font-bold text-teal-700 dark:text-teal-400">
+                          {report.reportNumber}
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-bold text-slate-900 dark:text-slate-100">{report.testName}</p>
+                          <span className="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                            {report.category}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-bold text-slate-900 dark:text-slate-100">{report.patientName}</p>
+                          <p className="text-slate-400">{report.patientPhone} • {report.patientGender}, {report.patientAge}y</p>
+                        </td>
+                        {user.role !== "DOCTOR" && (
+                          <td className="px-4 py-3">
+                            <p className="font-semibold text-teal-700 dark:text-teal-400">{report.referredDoctorName}</p>
+                          </td>
+                        )}
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400 font-medium">
+                          {report.sampleType || "Specimen"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            variant={report.status === "COMPLETED" || report.status === "DELIVERED" ? "default" : "secondary"}
+                            className="text-[10px] font-bold"
+                          >
+                            {report.status}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
+                          {new Date(report.createdAt).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button
+                            size="sm"
+                            onClick={() => handleOpenViewLabReport(report)}
+                            className="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3.5 py-1.5 h-8.5 rounded-lg gap-1.5 shadow-xs font-bold cursor-pointer transition-all hover:scale-[1.02]"
+                          >
+                            <FlaskConical className="h-3 w-3" />
+                            View / Download PDF
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* User Profile & Session Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
@@ -1382,6 +1550,22 @@ export default function DashboardPage() {
         prescription={selectedPrescriptionForView}
         isOpen={showViewRxModal}
         onClose={() => setShowViewRxModal(false)}
+      />
+
+      {/* Create Official Diagnostic Lab Report Modal */}
+      <CreateLabReportDialog
+        isOpen={showCreateLabReportModal}
+        onClose={() => setShowCreateLabReportModal(false)}
+        onSuccess={handleLabReportCreated}
+        defaultDoctorName={currentDoctor?.name || "Dr. SM Siam"}
+        defaultPatientPhone={user?.phone || "01567898506"}
+      />
+
+      {/* View & Print Diagnostic Lab Report Dialog */}
+      <ViewLabReportDialog
+        isOpen={showViewLabReportModal}
+        onClose={() => setShowViewLabReportModal(false)}
+        report={selectedLabReportForView}
       />
     </div>
   );
