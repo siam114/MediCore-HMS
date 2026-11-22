@@ -26,6 +26,8 @@ import {
   Loader2,
   ExternalLink,
   FileText,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -77,7 +79,8 @@ export default function DashboardPage() {
   const [isSubmittingDoctor, setIsSubmittingDoctor] = useState(false);
   const [docName, setDocName] = useState("");
   const [docEmail, setDocEmail] = useState("");
-  const [docPassword, setDocPassword] = useState("Doctor@123");
+  const [docPassword, setDocPassword] = useState("");
+  const [showDocPassword, setShowDocPassword] = useState(false);
   const [createdDoctorCredentials, setCreatedDoctorCredentials] = useState<{ email: string; pass: string; name: string } | null>(null);
   const [docPhone, setDocPhone] = useState("");
   const [docDept, setDocDept] = useState("Cardiology");
@@ -337,9 +340,16 @@ export default function DashboardPage() {
       return;
     }
 
+    if (!docPassword || docPassword.trim().length < 6) {
+      toast.error("Doctor Login Password Required", {
+        description: "Please enter a password of at least 6 characters for this doctor.",
+      });
+      return;
+    }
+
     try {
       setIsSubmittingDoctor(true);
-      const chosenPassword = docPassword.trim() || "Doctor@123";
+      const chosenPassword = docPassword.trim();
       const res = await doctorService.create({
         name: docName,
         email: docEmail,
@@ -368,7 +378,7 @@ export default function DashboardPage() {
         // Reset form
         setDocName("");
         setDocEmail("");
-        setDocPassword("Doctor@123");
+        setDocPassword("");
         setDocSpecialization("");
         fetchDoctors();
         fetchUsers();
@@ -1403,13 +1413,14 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {/* Add New Doctor Modal Dialog */}
+      {/* Add New Doctor Modal Dialog - Fully Responsive Layout */}
       {showAddDoctorModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm overflow-y-auto animate-in fade-in">
-          <div className="w-full max-w-xl my-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-2xl max-h-[92vh] sm:max-h-[90vh] flex flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+            {/* Modal Header (Fixed at top) */}
+            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-900/70">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/20">
                   <Stethoscope className="h-5 w-5" />
                 </div>
                 <div>
@@ -1417,216 +1428,256 @@ export default function DashboardPage() {
                     Add New Specialist Doctor
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Registers doctor profile and creates portal credentials
+                    Registers doctor profile and creates custom portal credentials
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowAddDoctorModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                aria-label="Close dialog"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateDoctor} className="space-y-4 text-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="docName">Doctor Full Name *</Label>
-                  <Input
-                    id="docName"
-                    placeholder="e.g. Dr. Ayesha Rahman"
-                    value={docName}
-                    onChange={(e) => setDocName(e.target.value)}
-                    required
-                  />
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleCreateDoctor} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-sm flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docName">Doctor Full Name *</Label>
+                    <Input
+                      id="docName"
+                      placeholder="e.g. Dr. Ayesha Rahman"
+                      value={docName}
+                      onChange={(e) => setDocName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docEmail">Email Address (Doctor Login ID) *</Label>
+                    <Input
+                      id="docEmail"
+                      type="email"
+                      placeholder="e.g. dr.ayesha@medicore.com"
+                      value={docEmail}
+                      onChange={(e) => setDocEmail(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="docEmail">Email Address (Doctor Login ID) *</Label>
-                  <Input
-                    id="docEmail"
-                    type="email"
-                    placeholder="e.g. dr.ayesha@medicore.com"
-                    value={docEmail}
-                    onChange={(e) => setDocEmail(e.target.value)}
-                    required
-                  />
-                </div>
+                {/* Password & Department */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="docPassword">Doctor Login Password *</Label>
+                      <span className="text-[11px] font-semibold text-teal-600 dark:text-teal-400">
+                        Custom by Super Admin
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        id="docPassword"
+                        type={showDocPassword ? "text" : "password"}
+                        placeholder="Enter password (e.g. Ayesha@2026)"
+                        value={docPassword}
+                        onChange={(e) => setDocPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="pr-10 font-mono text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowDocPassword(!showDocPassword)}
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                        tabIndex={-1}
+                      >
+                        {showDocPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-500">
+                      Super Admin can enter any password (min 6 characters).
+                    </p>
+                  </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="docPassword">Doctor Login Password *</Label>
-                  <Input
-                    id="docPassword"
-                    type="text"
-                    placeholder="Set custom password (e.g. Doctor@123)"
-                    value={docPassword}
-                    onChange={(e) => setDocPassword(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="docDept">Department *</Label>
-                  <select
-                    id="docDept"
-                    value={docDept}
-                    onChange={(e) => setDocDept(e.target.value)}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  >
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Pediatrics">Pediatrics</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="General Medicine">General Medicine</option>
-                    <option value="General Surgery">General Surgery</option>
-                    <option value="Gynecology & Obstetrics">Gynecology & Obstetrics</option>
-                    <option value="ENT (Ear, Nose, Throat)">ENT (Ear, Nose, Throat)</option>
-                    <option value="Ophthalmology">Ophthalmology</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="docPhone">Phone Number</Label>
-                  <Input
-                    id="docPhone"
-                    placeholder="+8801567898506"
-                    value={docPhone}
-                    onChange={(e) => setDocPhone(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="docSpec">Clinical Specialization *</Label>
-                <Input
-                  id="docSpec"
-                  placeholder="e.g. Consultant - Interventional Cardiology"
-                  value={docSpecialization}
-                  onChange={(e) => setDocSpecialization(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="docQual">Qualifications</Label>
-                  <Input
-                    id="docQual"
-                    placeholder="e.g. MBBS, FCPS, MD"
-                    value={docQualification}
-                    onChange={(e) => setDocQualification(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="docExp">Experience (Years)</Label>
-                  <Input
-                    id="docExp"
-                    type="number"
-                    min="0"
-                    value={docExperience}
-                    onChange={(e) => setDocExperience(Number(e.target.value))}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="docFee">Consultation Fee (BDT) *</Label>
-                  <Input
-                    id="docFee"
-                    type="number"
-                    min="100"
-                    value={docFee}
-                    onChange={(e) => setDocFee(Number(e.target.value))}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Available Days */}
-              <div className="space-y-2">
-                <Label>Visiting Chamber Days *</Label>
-                <div className="flex flex-wrap gap-2">
-                  {ALL_DAYS.map((day) => (
-                    <button
-                      key={day}
-                      type="button"
-                      onClick={() => toggleDay(day)}
-                      className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
-                        selectedDays.includes(day)
-                          ? "bg-teal-600 text-white shadow-sm"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
-                      }`}
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docDept">Department *</Label>
+                    <select
+                      id="docDept"
+                      value={docDept}
+                      onChange={(e) => setDocDept(e.target.value)}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                     >
-                      {day}
-                    </button>
-                  ))}
+                      <option value="Cardiology">Cardiology</option>
+                      <option value="Neurology">Neurology</option>
+                      <option value="Pediatrics">Pediatrics</option>
+                      <option value="Orthopedics">Orthopedics</option>
+                      <option value="Dermatology">Dermatology</option>
+                      <option value="General Medicine">General Medicine</option>
+                      <option value="General Surgery">General Surgery</option>
+                      <option value="Gynecology & Obstetrics">Gynecology & Obstetrics</option>
+                      <option value="ENT (Ear, Nose, Throat)">ENT (Ear, Nose, Throat)</option>
+                      <option value="Ophthalmology">Ophthalmology</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docPhone">Phone Number</Label>
+                    <Input
+                      id="docPhone"
+                      placeholder="+8801567898506"
+                      value={docPhone}
+                      onChange={(e) => setDocPhone(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docSpec">Clinical Specialization *</Label>
+                    <Input
+                      id="docSpec"
+                      placeholder="e.g. Consultant - Interventional Cardiology"
+                      value={docSpecialization}
+                      onChange={(e) => setDocSpecialization(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docQual">Qualifications</Label>
+                    <Input
+                      id="docQual"
+                      placeholder="e.g. MBBS, FCPS, MD"
+                      value={docQualification}
+                      onChange={(e) => setDocQualification(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docExp">Experience (Years)</Label>
+                    <Input
+                      id="docExp"
+                      type="number"
+                      min="0"
+                      value={docExperience}
+                      onChange={(e) => setDocExperience(Number(e.target.value))}
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docFee">Consultation Fee (BDT) *</Label>
+                    <Input
+                      id="docFee"
+                      type="number"
+                      min="100"
+                      value={docFee}
+                      onChange={(e) => setDocFee(Number(e.target.value))}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Available Days */}
+                <div className="space-y-2">
+                  <Label>Visiting Chamber Days *</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {ALL_DAYS.map((day) => (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => toggleDay(day)}
+                        className={`px-3 py-1 text-xs rounded-full font-medium transition-colors cursor-pointer ${
+                          selectedDays.includes(day)
+                            ? "bg-teal-600 text-white shadow-sm"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Time & Room */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="startTime">Start Time</Label>
+                    <Input
+                      id="startTime"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      placeholder="05:00 PM"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="endTime">End Time</Label>
+                    <Input
+                      id="endTime"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      placeholder="09:00 PM"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="docRoom">Chamber / Room</Label>
+                    <Input
+                      id="docRoom"
+                      value={docRoom}
+                      onChange={(e) => setDocRoom(e.target.value)}
+                      placeholder="Room 304"
+                    />
+                  </div>
+                </div>
+
+                {/* Live Credentials Preview Box */}
+                <div className="rounded-xl bg-teal-50/80 p-3.5 text-xs text-teal-900 dark:bg-teal-950/40 dark:text-teal-200 border border-teal-200 dark:border-teal-800/60 space-y-2">
+                  <p className="font-bold flex items-center gap-1.5 text-teal-800 dark:text-teal-300">
+                    <ShieldCheck className="h-4 w-4 text-teal-600" />
+                    Doctor Portal Login Credentials (Live Preview):
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px] font-mono">
+                    <div className="bg-white/80 dark:bg-slate-900/80 p-2 rounded-lg border border-teal-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-500 font-sans block">LOGIN EMAIL:</span>
+                      <strong className="text-teal-700 dark:text-teal-300 break-all">
+                        {docEmail || "dr.email@medicore.com"}
+                      </strong>
+                    </div>
+                    <div className="bg-white/80 dark:bg-slate-900/80 p-2 rounded-lg border border-teal-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-500 font-sans block">PASSWORD:</span>
+                      <strong className="text-slate-900 dark:text-white">
+                        {docPassword ? docPassword : "(Enter your chosen password above)"}
+                      </strong>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-teal-700/90 dark:text-teal-400">
+                    The doctor will use this email and your chosen password to log in at <strong>/login</strong>.
+                  </p>
                 </div>
               </div>
 
-              {/* Time & Room */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="startTime">Start Time</Label>
-                  <Input
-                    id="startTime"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    placeholder="05:00 PM"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="endTime">End Time</Label>
-                  <Input
-                    id="endTime"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    placeholder="09:00 PM"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="docRoom">Chamber / Room</Label>
-                  <Input
-                    id="docRoom"
-                    value={docRoom}
-                    onChange={(e) => setDocRoom(e.target.value)}
-                    placeholder="Room 304"
-                  />
-                </div>
-              </div>
-
-              <div className="rounded-lg bg-teal-50 p-3 text-xs text-teal-800 dark:bg-teal-950/30 dark:text-teal-300 border border-teal-200/50 space-y-1">
-                <p className="font-bold flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-teal-600" />
-                  Doctor Portal Login Credentials:
-                </p>
-                <p className="font-mono text-[11px]">
-                  Login Email: <strong>{docEmail || "dr.email@medicore.com"}</strong>
-                </p>
-                <p className="font-mono text-[11px]">
-                  Password: <strong>{docPassword || "Doctor@123"}</strong>
-                </p>
-                <p className="text-[11px] text-teal-600/90 pt-0.5">
-                  The doctor will use this email & password to log in to their clinical consultation dashboard.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+              {/* Modal Footer (Sticky at bottom) */}
+              <div className="flex items-center justify-end gap-3 px-5 sm:px-6 py-3.5 border-t border-slate-100 bg-slate-50/80 dark:border-slate-800 dark:bg-slate-900/70 shrink-0">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setShowAddDoctorModal(false)}
                   disabled={isSubmittingDoctor}
+                  className="cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmittingDoctor}
-                  className="bg-teal-600 hover:bg-teal-700 text-white"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-medium shadow-sm cursor-pointer"
                 >
                   {isSubmittingDoctor ? (
                     <>
@@ -1646,7 +1697,7 @@ export default function DashboardPage() {
       {/* Success Modal Showing Newly Created Doctor Credentials */}
       {createdDoctorCredentials && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-teal-300 bg-white p-6 shadow-2xl dark:border-teal-800 dark:bg-slate-900 space-y-4 text-center">
+          <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-teal-300 bg-white p-6 shadow-2xl dark:border-teal-800 dark:bg-slate-900 space-y-4 text-center">
             <div className="h-12 w-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mx-auto">
               <CheckCircle2 className="h-6 w-6" />
             </div>
