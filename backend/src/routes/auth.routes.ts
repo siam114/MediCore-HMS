@@ -12,6 +12,8 @@ router.post("/login", validate(loginSchema), AuthController.login);
 router.post("/google", AuthController.googleAuth);
 router.get("/me", authenticate, AuthController.getMe);
 router.get("/users", authenticate, authorize(USER_ROLES.ADMIN), AuthController.getAllUsers);
+router.patch("/users/:id/role", authenticate, authorize(USER_ROLES.ADMIN), AuthController.updateUserRole);
+router.delete("/users/:id", authenticate, authorize(USER_ROLES.ADMIN), AuthController.deleteUser);
 router.post("/logout", AuthController.logout);
 
 export default router;

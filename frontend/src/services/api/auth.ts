@@ -41,4 +41,15 @@ export const authService = {
   async getAllUsers(): Promise<ApiResponse<{ users: UserSession[]; total: number }>> {
     return apiClient.get<{ users: UserSession[]; total: number }>("/auth/users");
   },
+
+  async updateUserRole(
+    userId: string,
+    role: "ADMIN" | "DOCTOR" | "STAFF" | "PATIENT"
+  ): Promise<ApiResponse<{ user: UserSession }>> {
+    return apiClient.patch<{ user: UserSession }>(`/auth/users/${userId}/role`, { role });
+  },
+
+  async deleteUser(userId: string): Promise<ApiResponse<{ message: string }>> {
+    return apiClient.delete<{ message: string }>(`/auth/users/${userId}`);
+  },
 };

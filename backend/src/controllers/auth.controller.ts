@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import { AuthService } from "../services/auth.service";
 import { AuthenticatedRequest } from "../types";
 import { getUsersCollection, toSafeUser } from "../models/user.model";
@@ -86,6 +87,70 @@ export class AuthController {
           users: allDocs.map((doc) => toSafeUser(doc)),
           total: allDocs.length,
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async updateUserRole(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = req.params.id as string;
+      const { role } = req.body;
+      const validRoles = ["ADMIN", "DOCTOR", "STAFF", "PATIENT"];
+      if (!validRoles.includes(role)) {
+        res.status(400).json({
+          success: false,
+          message: `Invalid role. Must be one of: ${validRoles.join(", ")}`,
+        });
+        return;
+      }
+
+      if (!ObjectId.isValid(id)) {
+        res.status(400).json({ success: false, message: "Invalid User ID format" });
+        return;
+      }
+
+      const users = getUsersCollection();
+      const updatedUser = await users.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: { role, updatedAt: new Date() } },
+        { returnDocument: "after" }
+      );
+
+      if (!updatedUser) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `User role successfully updated to ${role}`,
+        data: { user: toSafeUser(updatedUser) },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async deleteUser(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = req.params.id as string;
+      if (!ObjectId.isValid(id)) {
+        res.status(400).json({ success: false, message: "Invalid User ID format" });
+        return;
+      }
+
+      const users = getUsersCollection();
+      const result = await users.deleteOne({ _id: new ObjectId(id) });
+      if (result.deletedCount === 0) {
+        res.status(404).json({ success: false, message: "User not found" });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "User deleted successfully",
       });
     } catch (error) {
       next(error);

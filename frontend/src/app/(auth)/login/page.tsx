@@ -104,8 +104,8 @@ export default function LoginPage() {
   };
 
   const fillAdminCredentials = () => {
-    setValue("email", "admin@medicore.com");
-    setValue("password", "AdminPassword123");
+    setValue("email", "smsiam987@gmail.com");
+    setValue("password", "smsiam114674111@");
   };
 
   return (
@@ -285,18 +285,18 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between font-medium text-purple-800 dark:text-purple-300">
                   <span className="flex items-center gap-1.5 font-semibold">
                     <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
-                    Hospital Super Admin
+                    Master Super Admin (SM Siam)
                   </span>
                   <button
                     type="button"
                     onClick={fillAdminCredentials}
-                    className="rounded bg-purple-600 px-2 py-0.5 text-[11px] text-white hover:bg-purple-700 shadow-sm"
+                    className="rounded bg-purple-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-purple-700 shadow-sm cursor-pointer"
                   >
-                    Auto Fill Admin
+                    Auto Fill SM Siam
                   </button>
                 </div>
                 <p className="mt-1 text-slate-500 text-[11px] dark:text-slate-400">
-                  <span className="font-mono text-slate-700 dark:text-slate-300">admin@medicore.com</span> / <span className="font-mono text-slate-700 dark:text-slate-300">AdminPassword123</span>
+                  <span className="font-mono text-slate-700 dark:text-slate-300">smsiam987@gmail.com</span>
                 </p>
               </div>
 

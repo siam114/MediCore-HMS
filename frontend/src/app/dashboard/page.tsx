@@ -254,6 +254,37 @@ export default function DashboardPage() {
     }
   };
 
+  const handleRoleChange = async (userId: string, newRole: "ADMIN" | "DOCTOR" | "STAFF" | "PATIENT") => {
+    try {
+      const res = await authService.updateUserRole(userId, newRole);
+      if (res.success) {
+        toast.success(`User role successfully changed to ${newRole}!`);
+        setAllUsers((prev) =>
+          prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+        );
+      } else {
+        toast.error(res.message || "Failed to update user role");
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to update user role");
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Are you sure you want to remove user "${userName}" from the system?`)) return;
+    try {
+      const res = await authService.deleteUser(userId);
+      if (res.success) {
+        toast.success(`User "${userName}" deleted successfully`);
+        setAllUsers((prev) => prev.filter((u) => u.id !== userId));
+      } else {
+        toast.error(res.message || "Failed to delete user");
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to delete user");
+    }
+  };
+
   const handleUpdateAppointmentStatus = async (id: string, newStatus: string) => {
     try {
       const res = await appointmentService.updateStatus(id, newStatus);
@@ -756,42 +787,84 @@ export default function DashboardPage() {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase dark:bg-slate-900/60 dark:text-slate-400">
                     <tr>
-                      <th className="px-4 py-3">Name</th>
+                      <th className="px-4 py-3">User Name</th>
                       <th className="px-4 py-3">Email Address</th>
-                      <th className="px-4 py-3">Role</th>
-                      <th className="px-4 py-3">Account Status</th>
+                      <th className="px-4 py-3">Current Role</th>
+                      <th className="px-4 py-3">Change Role (Dynamic)</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                    {allUsers.map((item) => (
-                      <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
-                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
-                          {item.name}
-                        </td>
-                        <td className="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">
-                          {item.email}
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge
-                            variant={
-                              item.role === "ADMIN"
-                                ? "admin"
-                                : item.role === "DOCTOR"
-                                ? "doctor"
-                                : "success"
-                            }
-                          >
-                            {item.role}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                            {item.status || "ACTIVE"}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {allUsers.map((item) => {
+                      const isOwner = item.email === "smsiam987@gmail.com";
+                      return (
+                        <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                          <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
+                            <div className="flex items-center gap-2">
+                              <span>{item.name}</span>
+                              {isOwner && (
+                                <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 border border-amber-500/20">
+                                  SUPER ADMIN
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">
+                            {item.email}
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge
+                              variant={
+                                item.role === "ADMIN"
+                                  ? "admin"
+                                  : item.role === "DOCTOR"
+                                  ? "doctor"
+                                  : "success"
+                              }
+                            >
+                              {item.role}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            {isOwner ? (
+                              <span className="text-xs font-semibold text-slate-400 italic">
+                                Master Owner (Locked)
+                              </span>
+                            ) : (
+                              <select
+                                value={item.role}
+                                onChange={(e) => handleRoleChange(item.id, e.target.value as any)}
+                                className="h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:border-teal-500 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-colors"
+                              >
+                                <option value="PATIENT">Patient Portal</option>
+                                <option value="DOCTOR">Physician / Doctor</option>
+                                <option value="STAFF">Hospital Staff / Lab</option>
+                                <option value="ADMIN">Co-Admin</option>
+                              </select>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              {item.status || "ACTIVE"}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            {!isOwner && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteUser(item.id, item.name)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                                title="Remove User"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
