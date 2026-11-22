@@ -17,6 +17,10 @@ export const doctorService = {
     return apiClient.get<{ doctor: Doctor }>(`/doctors/${id}`);
   },
 
+  async getMyProfile(): Promise<ApiResponse<{ doctor: Doctor }>> {
+    return apiClient.get<{ doctor: Doctor }>("/doctors/profile/me");
+  },
+
   async create(data: CreateDoctorPayload): Promise<ApiResponse<{ doctor: Doctor }>> {
     return apiClient.post<{ doctor: Doctor }>("/doctors", data);
   },

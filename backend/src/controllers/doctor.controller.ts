@@ -45,6 +45,27 @@ export class DoctorController {
     }
   }
 
+  public static async getCurrentDoctorProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = (req as any).user?.id;
+      const email = (req as any).user?.email;
+      const doctor = await DoctorService.getDoctorByUserIdOrEmail(userId, email);
+      if (!doctor) {
+        res.status(404).json({
+          success: false,
+          message: "Doctor profile not found for current user",
+        });
+        return;
+      }
+      res.status(200).json({
+        success: true,
+        data: { doctor },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public static async updateDoctor(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const doctor = await DoctorService.updateDoctor(req.params.id as string, req.body);

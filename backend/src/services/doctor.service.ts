@@ -127,6 +127,22 @@ export class DoctorService {
     return toSafeDoctor(doctor);
   }
 
+  public static async getDoctorByUserIdOrEmail(userId?: string, email?: string): Promise<SafeDoctor | null> {
+    const doctors = getDoctorsCollection();
+    const query: any = {};
+    if (userId && ObjectId.isValid(userId)) {
+      query.$or = [{ userId: new ObjectId(userId) }];
+      if (email) query.$or.push({ email: email.toLowerCase() });
+    } else if (email) {
+      query.email = email.toLowerCase();
+    } else {
+      return null;
+    }
+
+    const doctor = await doctors.findOne(query);
+    return doctor ? toSafeDoctor(doctor) : null;
+  }
+
   public static async updateDoctor(id: string, input: UpdateDoctorInput): Promise<SafeDoctor> {
     if (!ObjectId.isValid(id)) {
       const error: any = new Error("Invalid doctor ID");

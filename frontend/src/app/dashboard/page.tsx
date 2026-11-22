@@ -24,6 +24,7 @@ import {
   Clock,
   Loader2,
   ExternalLink,
+  FileText,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -33,8 +34,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
-import { authService, doctorService, appointmentService } from "@/services/api";
-import type { UserSession, Doctor, Appointment } from "@/types";
+import { authService, doctorService, appointmentService, prescriptionService } from "@/services/api";
+import type { UserSession, Doctor, Appointment, Prescription } from "@/types";
+import { CreatePrescriptionDialog } from "@/components/prescriptions/CreatePrescriptionDialog";
+import { ViewPrescriptionDialog } from "@/components/prescriptions/ViewPrescriptionDialog";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -44,9 +47,19 @@ export default function DashboardPage() {
   const [allUsers, setAllUsers] = useState<UserSession[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+  const [currentDoctor, setCurrentDoctor] = useState<Doctor | null>(null);
+
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [isDoctorsLoading, setIsDoctorsLoading] = useState(false);
   const [isAppointmentsLoading, setIsAppointmentsLoading] = useState(false);
+  const [isPrescriptionsLoading, setIsPrescriptionsLoading] = useState(false);
+
+  // Prescription dialog states
+  const [showCreateRxModal, setShowCreateRxModal] = useState(false);
+  const [showViewRxModal, setShowViewRxModal] = useState(false);
+  const [selectedAppointmentForRx, setSelectedAppointmentForRx] = useState<Appointment | null>(null);
+  const [selectedPrescriptionForView, setSelectedPrescriptionForView] = useState<Prescription | null>(null);
 
   // Add Doctor Form state
   const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
@@ -74,7 +87,7 @@ export default function DashboardPage() {
     }
   }, [isLoading, isAuthenticated, router]);
 
-  // Load all users and doctors if current user is ADMIN
+  // Load role-specific data from MongoDB Atlas
   useEffect(() => {
     let isSubscribed = true;
     if (user?.role === "ADMIN") {
@@ -104,6 +117,45 @@ export default function DashboardPage() {
           }
         })
         .catch(console.error);
+
+      prescriptionService
+        .getAll()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setPrescriptions(res.data.prescriptions);
+          }
+        })
+        .catch(console.error);
+    } else if (user?.role === "DOCTOR") {
+      doctorService
+        .getMyProfile()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data?.doctor) {
+            const doc = res.data.doctor;
+            setCurrentDoctor(doc);
+
+            // Fetch appointments assigned to this doctor
+            appointmentService
+              .getDoctorAppointments(doc.id)
+              .then((aptRes) => {
+                if (isSubscribed && aptRes.success && aptRes.data) {
+                  setAppointments(aptRes.data.appointments);
+                }
+              })
+              .catch(console.error);
+
+            // Fetch prescriptions authored by this doctor
+            prescriptionService
+              .getByDoctor(doc.id)
+              .then((rxRes) => {
+                if (isSubscribed && rxRes.success && rxRes.data) {
+                  setPrescriptions(rxRes.data.prescriptions);
+                }
+              })
+              .catch(console.error);
+          }
+        })
+        .catch(console.error);
     } else if (user?.role === "PATIENT") {
       appointmentService
         .getMy()
@@ -113,11 +165,41 @@ export default function DashboardPage() {
           }
         })
         .catch(console.error);
+
+      prescriptionService
+        .getMy()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setPrescriptions(res.data.prescriptions);
+          }
+        })
+        .catch(console.error);
     }
     return () => {
       isSubscribed = false;
     };
   }, [user?.role]);
+
+  const handleOpenCreateRx = (appointment: Appointment) => {
+    setSelectedAppointmentForRx(appointment);
+    setShowCreateRxModal(true);
+  };
+
+  const handleOpenViewRx = (prescription: Prescription) => {
+    setSelectedPrescriptionForView(prescription);
+    setShowViewRxModal(true);
+  };
+
+  const handlePrescriptionCreated = (newRx: Prescription) => {
+    setPrescriptions((prev) => [newRx, ...prev]);
+    if (newRx.appointmentId) {
+      setAppointments((prev) =>
+        prev.map((a) => (a.id === newRx.appointmentId ? { ...a, status: "COMPLETED" } : a))
+      );
+    }
+    setSelectedPrescriptionForView(newRx);
+    setShowViewRxModal(true);
+  };
 
   const handleUpdateAppointmentStatus = async (id: string, newStatus: string) => {
     try {
@@ -313,6 +395,8 @@ export default function DashboardPage() {
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 {user.role === "ADMIN"
                   ? "Manage hospital physicians, clinical rosters, patient registrations, and system records."
+                  : user.role === "DOCTOR"
+                  ? `${currentDoctor?.specialization || "Clinical Specialist"} • ${currentDoctor?.department || "Consultant"} • Chamber: ${currentDoctor?.roomNumber || "Visiting Suite"}`
                   : "You are securely logged into MediCore Hospital Management System."}
               </p>
             </div>
@@ -323,9 +407,84 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* If DOCTOR: Show Doctor's Clinical Statistics Cards */}
+        {user.role === "DOCTOR" && (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Assigned Patients</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {appointments.length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600">
+                  <Calendar className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Awaiting Consultation</p>
+                  <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
+                    {appointments.filter((a) => a.status !== "COMPLETED" && a.status !== "CANCELLED").length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-600">
+                  <Clock className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Completed Serials</p>
+                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+                    {appointments.filter((a) => a.status === "COMPLETED").length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Prescriptions Authored</p>
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+                    {prescriptions.length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-600">
+                  <Activity className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm col-span-2 sm:col-span-1">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Consultation Fee</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    ৳{(currentDoctor?.consultationFee || 1400).toLocaleString()}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-600">
+                  <Stethoscope className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* If ADMIN: Show Hospital Statistics Cards */}
         {user.role === "ADMIN" && (
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-6 gap-4">
             <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
@@ -382,7 +541,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm col-span-2 sm:col-span-1">
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs text-slate-500 font-medium">Booked Serials</p>
@@ -392,6 +551,20 @@ export default function DashboardPage() {
                 </div>
                 <div className="h-10 w-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600">
                   <Calendar className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Issued Prescriptions</p>
+                  <p className="text-2xl font-bold text-teal-600 dark:text-teal-400 mt-1">
+                    {prescriptions.length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600">
+                  <Activity className="h-5 w-5" />
                 </div>
               </CardContent>
             </Card>
@@ -573,16 +746,22 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* Appointments Section (Available for both ADMIN and PATIENTS) */}
+        {/* Appointments Section (Available for ADMIN, DOCTORS, and PATIENTS) */}
         <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
           <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
             <div>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-teal-600" />
-                {user.role === "ADMIN" ? "Patient Appointments & Serials" : "My Consultation Appointments"}
+                {user.role === "DOCTOR"
+                  ? "Today's Patient Queue (Consultation Serials)"
+                  : user.role === "ADMIN"
+                  ? "Patient Appointments & Serials"
+                  : "My Consultation Appointments"}
               </CardTitle>
               <CardDescription>
-                {user.role === "ADMIN"
+                {user.role === "DOCTOR"
+                  ? "Real-time queue of patients booked for your consultation chamber. Click 'Write Prescription' to prescribe medications and issue digital Rx."
+                  : user.role === "ADMIN"
                   ? "Live registry of all patient doctor appointments booked through the portal"
                   : "Your scheduled doctor visits, chamber rooms, and consultation tokens"}
               </CardDescription>
@@ -601,9 +780,13 @@ export default function DashboardPage() {
             {appointments.length === 0 ? (
               <div className="text-center py-10 space-y-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg">
                 <Calendar className="h-8 w-8 text-slate-300 mx-auto" />
-                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No appointments recorded yet.</p>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  {user.role === "DOCTOR" ? "No patients in queue for your chamber today." : "No appointments recorded yet."}
+                </p>
                 <p className="text-xs text-slate-400">
-                  {user.role === "ADMIN"
+                  {user.role === "DOCTOR"
+                    ? "Booked serials from patients will automatically appear in your chamber queue."
+                    : user.role === "ADMIN"
                     ? "Patient bookings will appear here in real time."
                     : "Visit the Doctor Directory to book a specialist serial."}
                 </p>
@@ -625,74 +808,271 @@ export default function DashboardPage() {
                     <tr>
                       <th className="px-4 py-3">Token Serial</th>
                       <th className="px-4 py-3">Patient Details</th>
-                      <th className="px-4 py-3">Physician / Chamber</th>
+                      {user.role !== "DOCTOR" && <th className="px-4 py-3">Physician / Chamber</th>}
                       <th className="px-4 py-3">Date & Time</th>
                       <th className="px-4 py-3">Fee</th>
                       <th className="px-4 py-3">Status</th>
-                      {user.role === "ADMIN" && <th className="px-4 py-3 text-right">Actions</th>}
+                      <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                    {appointments.map((apt) => (
-                      <tr key={apt.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
-                        <td className="px-4 py-3 font-mono font-bold text-teal-700 dark:text-teal-400">
-                          {apt.serialNumber}
-                        </td>
-                        <td className="px-4 py-3">
-                          <p className="font-bold text-slate-900 dark:text-slate-100">{apt.patientName}</p>
-                          <p className="text-slate-400">{apt.patientPhone} • {apt.patientGender}, {apt.patientAge}y</p>
-                        </td>
-                        <td className="px-4 py-3">
-                          <p className="font-semibold text-slate-800 dark:text-slate-200">{apt.doctorName}</p>
-                          <p className="text-slate-400">{apt.doctorDepartment} ({apt.roomNumber})</p>
-                        </td>
-                        <td className="px-4 py-3">
-                          <p className="font-medium text-slate-800 dark:text-slate-200">{apt.appointmentDate}</p>
-                          <p className="text-slate-400">{apt.appointmentTime}</p>
-                        </td>
-                        <td className="px-4 py-3 font-bold text-slate-900 dark:text-slate-100">
-                          ৳{apt.consultationFee.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold",
-                              apt.status === "CONFIRMED"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"
-                                : apt.status === "COMPLETED"
-                                ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300"
-                                : apt.status === "CANCELLED"
-                                ? "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300"
-                                : "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300"
+                    {appointments.map((apt) => {
+                      const linkedRx = prescriptions.find(
+                        (p) => p.appointmentId === apt.id || (p.serialNumber && p.serialNumber === apt.serialNumber)
+                      );
+
+                      return (
+                        <tr key={apt.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                          <td className="px-4 py-3 font-mono font-bold text-teal-700 dark:text-teal-400">
+                            {apt.serialNumber}
+                          </td>
+                          <td className="px-4 py-3">
+                            <p className="font-bold text-slate-900 dark:text-slate-100">{apt.patientName}</p>
+                            <p className="text-slate-400">{apt.patientPhone} • {apt.patientGender}, {apt.patientAge}y</p>
+                            {apt.problemDescription && (
+                              <p className="text-[11px] text-teal-700 dark:text-teal-400 italic mt-0.5">
+                                &quot;{apt.problemDescription}&quot;
+                              </p>
                             )}
-                          >
-                            {apt.status}
-                          </span>
-                        </td>
-                        {user.role === "ADMIN" && (
+                          </td>
+                          {user.role !== "DOCTOR" && (
+                            <td className="px-4 py-3">
+                              <p className="font-semibold text-slate-800 dark:text-slate-200">{apt.doctorName}</p>
+                              <p className="text-slate-400">{apt.doctorDepartment} ({apt.roomNumber})</p>
+                            </td>
+                          )}
+                          <td className="px-4 py-3">
+                            <p className="font-medium text-slate-800 dark:text-slate-200">{apt.appointmentDate}</p>
+                            <p className="text-slate-400">{apt.appointmentTime}</p>
+                          </td>
+                          <td className="px-4 py-3 font-bold text-slate-900 dark:text-slate-100">
+                            ৳{apt.consultationFee.toLocaleString()}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={cn(
+                                "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold",
+                                apt.status === "CONFIRMED"
+                                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"
+                                  : apt.status === "COMPLETED"
+                                  ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300"
+                                  : apt.status === "CANCELLED"
+                                  ? "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300"
+                                  : "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300"
+                              )}
+                            >
+                              {apt.status}
+                            </span>
+                          </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex items-center justify-end gap-1.5">
-                              {apt.status !== "COMPLETED" && (
-                                <button
-                                  onClick={() => handleUpdateAppointmentStatus(apt.id, "COMPLETED")}
-                                  className="rounded px-2 py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
-                                  title="Mark as Completed"
-                                >
-                                  Complete
-                                </button>
+                              {/* Doctor Actions */}
+                              {user.role === "DOCTOR" && (
+                                <>
+                                  {apt.status !== "COMPLETED" && apt.status !== "CANCELLED" ? (
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleOpenCreateRx(apt)}
+                                      className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold"
+                                    >
+                                      <FileText className="h-3.5 w-3.5" />
+                                      Write Prescription
+                                    </Button>
+                                  ) : (
+                                    <div className="flex items-center gap-1.5">
+                                      {linkedRx && (
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => handleOpenViewRx(linkedRx)}
+                                          className="text-teal-700 border-teal-200 hover:bg-teal-50 dark:text-teal-300 dark:border-teal-800 text-[11px] h-7 gap-1"
+                                        >
+                                          <FileText className="h-3 w-3" />
+                                          View Rx
+                                        </Button>
+                                      )}
+                                      <span className="text-[11px] text-emerald-600 font-semibold inline-flex items-center gap-1">
+                                        <CheckCircle2 className="h-3 w-3" />
+                                        Consulted
+                                      </span>
+                                    </div>
+                                  )}
+                                </>
                               )}
-                              {apt.status !== "CANCELLED" && (
-                                <button
-                                  onClick={() => handleUpdateAppointmentStatus(apt.id, "CANCELLED")}
-                                  className="rounded px-2 py-1 text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50"
-                                  title="Cancel Appointment"
-                                >
-                                  Cancel
-                                </button>
+
+                              {/* Admin Actions */}
+                              {user.role === "ADMIN" && (
+                                <>
+                                  {linkedRx && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleOpenViewRx(linkedRx)}
+                                      className="text-teal-700 border-teal-200 hover:bg-teal-50 dark:text-teal-300 dark:border-teal-800 text-[11px] h-7 gap-1"
+                                    >
+                                      <FileText className="h-3 w-3" />
+                                      Rx
+                                    </Button>
+                                  )}
+                                  {apt.status !== "COMPLETED" && (
+                                    <button
+                                      onClick={() => handleUpdateAppointmentStatus(apt.id, "COMPLETED")}
+                                      className="rounded px-2 py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
+                                      title="Mark as Completed"
+                                    >
+                                      Complete
+                                    </button>
+                                  )}
+                                  {apt.status !== "CANCELLED" && (
+                                    <button
+                                      onClick={() => handleUpdateAppointmentStatus(apt.id, "CANCELLED")}
+                                      className="rounded px-2 py-1 text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50"
+                                      title="Cancel Appointment"
+                                    >
+                                      Cancel
+                                    </button>
+                                  )}
+                                </>
+                              )}
+
+                              {/* Patient Actions */}
+                              {user.role === "PATIENT" && (
+                                <>
+                                  {linkedRx && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleOpenViewRx(linkedRx)}
+                                      className="text-teal-700 border-teal-200 hover:bg-teal-50 dark:text-teal-300 dark:border-teal-800 text-[11px] h-7 gap-1 font-semibold"
+                                    >
+                                      <FileText className="h-3.5 w-3.5" />
+                                      View Prescription
+                                    </Button>
+                                  )}
+                                </>
                               )}
                             </div>
                           </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Digital Prescriptions Section (Available for DOCTOR, PATIENT, and ADMIN) */}
+        <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FileText className="h-5 w-5 text-teal-600" />
+                {user.role === "DOCTOR"
+                  ? "Authored Digital Prescriptions (Rx Records)"
+                  : user.role === "PATIENT"
+                  ? "My Medical Prescriptions & Medication Advice"
+                  : "Hospital Digital Prescriptions Registry"}
+              </CardTitle>
+              <CardDescription>
+                {user.role === "DOCTOR"
+                  ? "Clinical consultation records and e-prescriptions issued from your chamber"
+                  : user.role === "PATIENT"
+                  ? "Official e-prescriptions with prescribed medications, doses, and clinical directions"
+                  : "All official electronic prescriptions generated across clinical departments"}
+              </CardDescription>
+            </div>
+            {user.role === "DOCTOR" && (
+              <Button
+                size="sm"
+                onClick={() => {
+                  setSelectedAppointmentForRx(null);
+                  setShowCreateRxModal(true);
+                }}
+                className="bg-teal-600 hover:bg-teal-700 text-white text-xs gap-1.5 shadow-sm"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                New Direct Prescription
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent>
+            {prescriptions.length === 0 ? (
+              <div className="text-center py-10 space-y-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg">
+                <FileText className="h-8 w-8 text-slate-300 mx-auto" />
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  No digital prescriptions found.
+                </p>
+                <p className="text-xs text-slate-400">
+                  {user.role === "DOCTOR"
+                    ? "Prescriptions generated during patient consultations will be recorded here."
+                    : "Prescriptions issued by attending physicians will appear here with instant print & download."}
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-slate-100 dark:border-slate-800">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase dark:bg-slate-900/60 dark:text-slate-400">
+                    <tr>
+                      <th className="px-4 py-3">Prescription #</th>
+                      <th className="px-4 py-3">Patient Name</th>
+                      {user.role !== "DOCTOR" && <th className="px-4 py-3">Attending Physician</th>}
+                      <th className="px-4 py-3">Diagnosis</th>
+                      <th className="px-4 py-3">Medicines</th>
+                      <th className="px-4 py-3">Date</th>
+                      <th className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                    {prescriptions.map((rx) => (
+                      <tr key={rx.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                        <td className="px-4 py-3 font-mono font-bold text-teal-700 dark:text-teal-400">
+                          {rx.prescriptionNumber}
+                          {rx.serialNumber && (
+                            <span className="block text-[10px] text-slate-400 font-sans">
+                              Token #{rx.serialNumber}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-bold text-slate-900 dark:text-slate-100">{rx.patientName}</p>
+                          <p className="text-slate-400">{rx.patientPhone} • {rx.patientGender}, {rx.patientAge}y</p>
+                        </td>
+                        {user.role !== "DOCTOR" && (
+                          <td className="px-4 py-3">
+                            <p className="font-semibold text-slate-800 dark:text-slate-200">{rx.doctorName}</p>
+                            <p className="text-slate-400">{rx.doctorDepartment}</p>
+                          </td>
                         )}
+                        <td className="px-4 py-3">
+                          <p className="font-semibold text-slate-800 dark:text-slate-200">{rx.diagnosis}</p>
+                          {rx.vitals?.bloodPressure && (
+                            <p className="text-[11px] text-slate-400">BP: {rx.vitals.bloodPressure}</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 px-2 py-0.5 font-bold text-teal-700 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300">
+                            {rx.medicines.length} Medicines
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
+                          {new Date(rx.createdAt).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button
+                            size="sm"
+                            onClick={() => handleOpenViewRx(rx)}
+                            className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold"
+                          >
+                            <FileText className="h-3 w-3" />
+                            View & Print Rx
+                          </Button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -987,6 +1367,22 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Create Digital Prescription Consultation Pad Modal */}
+      <CreatePrescriptionDialog
+        appointment={selectedAppointmentForRx}
+        doctor={currentDoctor}
+        isOpen={showCreateRxModal}
+        onClose={() => setShowCreateRxModal(false)}
+        onSuccess={handlePrescriptionCreated}
+      />
+
+      {/* View & Print Prescription Pad Dialog */}
+      <ViewPrescriptionDialog
+        prescription={selectedPrescriptionForView}
+        isOpen={showViewRxModal}
+        onClose={() => setShowViewRxModal(false)}
+      />
     </div>
   );
 }

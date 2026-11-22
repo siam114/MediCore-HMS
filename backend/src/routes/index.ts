@@ -3,6 +3,7 @@ import { isDbConnected, getDb } from "../config/db";
 import authRoutes from "./auth.routes";
 import doctorRoutes from "./doctor.routes";
 import appointmentRoutes from "./appointment.routes";
+import prescriptionRoutes from "./prescription.routes";
 
 const router = Router();
 
@@ -35,5 +36,8 @@ router.use("/doctors", doctorRoutes);
 
 // Appointment & Serial booking routes
 router.use("/appointments", appointmentRoutes);
+
+// Doctor Consultation & Digital Prescription routes
+router.use("/prescriptions", prescriptionRoutes);
 
 export default router;

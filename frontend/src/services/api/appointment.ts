@@ -20,6 +20,18 @@ export const appointmentService = {
   },
 
   /**
+   * Get doctor appointments
+   */
+  async getDoctorAppointments(
+    doctorId: string,
+    date?: string
+  ): Promise<ApiResponse<{ appointments: Appointment[] }>> {
+    return apiClient.get<{ appointments: Appointment[] }>(`/appointments/doctor/${doctorId}`, {
+      params: date ? { date } : undefined,
+    });
+  },
+
+  /**
    * Get all appointments (Admin/Staff view)
    */
   async getAll(params?: {

@@ -10,6 +10,7 @@ const router = Router();
 // Public routes (patients and public can view doctors and departments)
 router.get("/", DoctorController.getAllDoctors);
 router.get("/departments", DoctorController.getDepartments);
+router.get("/profile/me", authenticate, DoctorController.getCurrentDoctorProfile);
 router.get("/:id", DoctorController.getDoctorById);
 
 // Protected routes (Only ADMIN can add or delete doctor profiles)

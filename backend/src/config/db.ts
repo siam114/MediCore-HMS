@@ -66,6 +66,12 @@ async function initIndexes(database: Db): Promise<void> {
     await appointmentsCollection.createIndex({ doctorId: 1, appointmentDate: 1 });
     await appointmentsCollection.createIndex({ patientPhone: 1 });
     await appointmentsCollection.createIndex({ patientId: 1 });
+
+    const prescriptionsCollection = database.collection("prescriptions");
+    await prescriptionsCollection.createIndex({ prescriptionNumber: 1 }, { unique: true });
+    await prescriptionsCollection.createIndex({ doctorId: 1, createdAt: -1 });
+    await prescriptionsCollection.createIndex({ patientPhone: 1 });
+    await prescriptionsCollection.createIndex({ appointmentId: 1 });
   } catch (err) {
     console.warn("[MongoDB] Index creation notice:", err instanceof Error ? err.message : err);
   }
