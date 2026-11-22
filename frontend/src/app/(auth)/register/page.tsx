@@ -225,7 +225,7 @@ export default function RegisterPage() {
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="+8801700000000"
+                      placeholder="+8801567898506"
                       className="pl-9"
                       {...register("phone")}
                     />

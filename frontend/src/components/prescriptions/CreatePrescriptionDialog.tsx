@@ -238,7 +238,7 @@ export function CreatePrescriptionDialog({
                 <Input
                   value={patientPhone}
                   onChange={(e) => setPatientPhone(e.target.value)}
-                  placeholder="017xxxxxxxx"
+                  placeholder="01567898506"
                   required
                 />
               </div>

@@ -48,7 +48,7 @@ async function main() {
         userId: doctorUser?._id,
         name: "Dr. SM Siam",
         email: "dr.siam@medicore.com",
-        phone: "+880 1711-100201",
+        phone: "+880 1567-898506",
         department: "Cardiology",
         specialization: "Interventional Cardiology & Coronary Angioplasty",
         qualification: "MBBS, FCPS (Cardiology), FACC (USA), Fellow Interventional Cardiology",

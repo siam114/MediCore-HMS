@@ -74,7 +74,7 @@ export function ViewPrescriptionDialog({
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(100, 116, 139);
-      doc.text("Plot 14, Block C, Gulshan-2, Dhaka-1212  |  Hotline: 10666  |  www.medicore.com", 14, 25);
+      doc.text("Plot 14, Block C, Gulshan-2, Dhaka-1212  |  Hotline: +880 1567-898506  |  www.medicore.com", 14, 25);
 
       // Prescription Reference Box (Top Right)
       doc.setFillColor(240, 253, 250);
@@ -323,7 +323,7 @@ export function ViewPrescriptionDialog({
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7);
       doc.setTextColor(148, 163, 184);
-      doc.text("MediCore Hospitals Digital Health Network  |  Valid Electronic Prescription  |  Hotline: 10666", 14, 266);
+      doc.text("MediCore Hospitals Digital Health Network  |  Valid Electronic Prescription  |  Helpline: +880 1567-898506", 14, 266);
 
       // Doctor's Signature Area
       doc.setDrawColor(100, 116, 139);
@@ -503,7 +503,7 @@ export function ViewPrescriptionDialog({
                       Tertiary Care & Specialist Research Center
                     </p>
                     <p className="text-[10px] text-slate-500 mt-0.5 print:text-[9px]">
-                      Plot 14, Block C, Gulshan-2, Dhaka-1212 • Hotline: 10666 • www.medicore.com
+                      Plot 14, Block C, Gulshan-2, Dhaka-1212 • Hotline: +880 1567-898506 • www.medicore.com
                     </p>
                   </div>
                 </div>

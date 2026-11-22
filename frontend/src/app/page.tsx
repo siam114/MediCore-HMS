@@ -383,8 +383,8 @@ export default function HomePage() {
             <div className="hidden sm:flex items-center gap-1 text-slate-300">
               <Phone className="h-3.5 w-3.5 text-teal-400" />
               <span>Appointment Line:</span>
-              <a href="tel:+8809610010666" className="hover:text-white transition-colors">
-                +880 9610-010666
+              <a href="tel:+8801567898506" className="hover:text-white transition-colors font-medium">
+                +880 1567-898506
               </a>
             </div>
             <span className="hidden lg:inline text-slate-600">|</span>
@@ -757,11 +757,11 @@ export default function HomePage() {
                   </a>
 
                   <a
-                    href="tel:+8809610010666"
+                    href="tel:+8801567898506"
                     className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-3 text-slate-800 hover:bg-slate-50 transition-colors text-center dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   >
                     <span className="text-[11px] font-medium text-slate-400">Doctor Helpline</span>
-                    <span className="text-sm font-bold">09610-010666</span>
+                    <span className="text-sm font-bold">01567-898506</span>
                   </a>
                 </div>
               </div>
@@ -955,10 +955,10 @@ export default function HomePage() {
                 </a>
 
                 <a
-                  href="tel:+8809610010666"
+                  href="tel:+8801567898506"
                   className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
                 >
-                  General Hospital Helpline: +880 9610-010666
+                  General Hospital Helpline: +880 1567-898506
                 </a>
               </div>
             </div>
@@ -1465,7 +1465,7 @@ export default function HomePage() {
                 Plot 81, Block E, Bashundhara R/A, Dhaka-1229, Bangladesh
               </p>
               <p className="text-xs text-slate-400">
-                Emergency 24/7: <a href="tel:10666" className="text-white font-bold hover:underline">10666</a> | Helpline: +880 9610-010666
+                Emergency 24/7: <a href="tel:10666" className="text-white font-bold hover:underline">10666</a> | Helpline: +880 1567-898506
               </p>
             </div>
 
@@ -1478,7 +1478,7 @@ export default function HomePage() {
                 Holding 44, GEC Circle, Nasirabad, Chattogram-4000
               </p>
               <p className="text-xs text-slate-400">
-                Direct Appointment: +880 9610-010777
+                Direct Appointment: +880 1567-898506
               </p>
             </div>
           </div>
@@ -1508,7 +1508,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-teal-400 shrink-0" />
-                  <span>Emergency: 10666 | General Helpline: +880 9610-010666</span>
+                  <span>Emergency: 10666 | General Helpline: +880 1567-898506</span>
                 </div>
               </div>
             </div>

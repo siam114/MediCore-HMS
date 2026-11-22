@@ -272,7 +272,7 @@ export default function DoctorsDirectoryPage() {
               Emergency: 10666
             </span>
             <span className="hidden sm:inline text-slate-600">|</span>
-            <span className="hidden sm:inline text-slate-300">Appointment Helpline: +880 9610-010666</span>
+            <span className="hidden sm:inline text-slate-300">Appointment Helpline: +880 1567-898506</span>
           </div>
 
           <div className="flex items-center gap-3 text-[11px] text-slate-300">
@@ -341,7 +341,7 @@ export default function DoctorsDirectoryPage() {
 
       {/* Simple Hospital Directory Footer */}
       <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-900">
-        <p>© 2026 MediCore Hospital & Research Center. 24/7 Helpline: 10666</p>
+        <p>© 2026 MediCore Hospital & Research Center. 24/7 Helpline: +880 1567-898506</p>
       </footer>
     </div>
   );

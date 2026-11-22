@@ -255,7 +255,7 @@ export default function DashboardPage() {
       const res = await doctorService.create({
         name: docName,
         email: docEmail,
-        phone: docPhone || "+8801700000000",
+        phone: docPhone || "+8801567898506",
         department: docDept,
         specialization: docSpecialization,
         qualification: docQualification,
@@ -1227,7 +1227,7 @@ export default function DashboardPage() {
                   <Label htmlFor="docPhone">Phone Number</Label>
                   <Input
                     id="docPhone"
-                    placeholder="+8801700123456"
+                    placeholder="+8801567898506"
                     value={docPhone}
                     onChange={(e) => setDocPhone(e.target.value)}
                   />

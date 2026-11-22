@@ -338,7 +338,7 @@ export function BookAppointmentDialog({
                   id="patientPhone"
                   type="tel"
                   required
-                  placeholder="e.g. 01711-000000"
+                  placeholder="e.g. 01567-898506"
                   value={patientPhone}
                   onChange={(e) => setPatientPhone(e.target.value)}
                   className="h-10 text-xs"
