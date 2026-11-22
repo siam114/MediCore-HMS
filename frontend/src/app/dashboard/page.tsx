@@ -9,6 +9,7 @@ import {
   LogOut,
   User,
   Shield,
+  ShieldCheck,
   Mail,
   Key,
   CheckCircle2,
@@ -76,6 +77,8 @@ export default function DashboardPage() {
   const [isSubmittingDoctor, setIsSubmittingDoctor] = useState(false);
   const [docName, setDocName] = useState("");
   const [docEmail, setDocEmail] = useState("");
+  const [docPassword, setDocPassword] = useState("Doctor@123");
+  const [createdDoctorCredentials, setCreatedDoctorCredentials] = useState<{ email: string; pass: string; name: string } | null>(null);
   const [docPhone, setDocPhone] = useState("");
   const [docDept, setDocDept] = useState("Cardiology");
   const [docSpecialization, setDocSpecialization] = useState("");
@@ -336,6 +339,7 @@ export default function DashboardPage() {
 
     try {
       setIsSubmittingDoctor(true);
+      const chosenPassword = docPassword.trim() || "Doctor@123";
       const res = await doctorService.create({
         name: docName,
         email: docEmail,
@@ -348,16 +352,23 @@ export default function DashboardPage() {
         availableDays: selectedDays,
         availableTime: { start: startTime, end: endTime },
         roomNumber: docRoom,
+        defaultPassword: chosenPassword,
       });
 
       if (res.success) {
         toast.success(`Doctor Created Successfully!`, {
-          description: `${docName} registered with portal credentials.`,
+          description: `${docName} registered with login ID: ${docEmail}`,
+        });
+        setCreatedDoctorCredentials({
+          name: docName,
+          email: docEmail,
+          pass: chosenPassword,
         });
         setShowAddDoctorModal(false);
         // Reset form
         setDocName("");
         setDocEmail("");
+        setDocPassword("Doctor@123");
         setDocSpecialization("");
         fetchDoctors();
         fetchUsers();
@@ -1432,13 +1443,25 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="docEmail">Email Address (Login ID) *</Label>
+                  <Label htmlFor="docEmail">Email Address (Doctor Login ID) *</Label>
                   <Input
                     id="docEmail"
                     type="email"
                     placeholder="e.g. dr.ayesha@medicore.com"
                     value={docEmail}
                     onChange={(e) => setDocEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="docPassword">Doctor Login Password *</Label>
+                  <Input
+                    id="docPassword"
+                    type="text"
+                    placeholder="Set custom password (e.g. Doctor@123)"
+                    value={docPassword}
+                    onChange={(e) => setDocPassword(e.target.value)}
                     required
                   />
                 </div>
@@ -1575,9 +1598,20 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <div className="rounded-lg bg-teal-50 p-2.5 text-xs text-teal-800 dark:bg-teal-950/30 dark:text-teal-300 border border-teal-200/50">
-                💡 Doctor will automatically receive portal login with default password:{" "}
-                <span className="font-mono font-bold">Doctor@123</span>
+              <div className="rounded-lg bg-teal-50 p-3 text-xs text-teal-800 dark:bg-teal-950/30 dark:text-teal-300 border border-teal-200/50 space-y-1">
+                <p className="font-bold flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-teal-600" />
+                  Doctor Portal Login Credentials:
+                </p>
+                <p className="font-mono text-[11px]">
+                  Login Email: <strong>{docEmail || "dr.email@medicore.com"}</strong>
+                </p>
+                <p className="font-mono text-[11px]">
+                  Password: <strong>{docPassword || "Doctor@123"}</strong>
+                </p>
+                <p className="text-[11px] text-teal-600/90 pt-0.5">
+                  The doctor will use this email & password to log in to their clinical consultation dashboard.
+                </p>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
@@ -1605,6 +1639,34 @@ export default function DashboardPage() {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal Showing Newly Created Doctor Credentials */}
+      {createdDoctorCredentials && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md rounded-2xl border border-teal-300 bg-white p-6 shadow-2xl dark:border-teal-800 dark:bg-slate-900 space-y-4 text-center">
+            <div className="h-12 w-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+              Doctor Account Created Successfully!
+            </h3>
+            <p className="text-xs text-slate-500">
+              {createdDoctorCredentials.name} has been added to the hospital registry. Share these credentials with the doctor:
+            </p>
+            <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 text-xs text-left space-y-2 dark:bg-slate-800 dark:border-slate-700 font-mono">
+              <p><span className="text-slate-400 font-sans">Portal URL:</span> http://localhost:3000/login</p>
+              <p><span className="text-slate-400 font-sans">Doctor Login ID:</span> <strong className="text-teal-700 dark:text-teal-300">{createdDoctorCredentials.email}</strong></p>
+              <p><span className="text-slate-400 font-sans">Password:</span> <strong className="text-slate-900 dark:text-white">{createdDoctorCredentials.pass}</strong></p>
+            </div>
+            <Button
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold h-10 rounded-xl cursor-pointer"
+              onClick={() => setCreatedDoctorCredentials(null)}
+            >
+              Done & Close
+            </Button>
           </div>
         </div>
       )}
