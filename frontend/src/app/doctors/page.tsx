@@ -19,12 +19,13 @@ import {
   HeartPulse,
 } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/services/api";
+import { BookAppointmentDialog } from "@/components/appointments/BookAppointmentDialog";
 import type { Doctor } from "@/types";
 
 const DEPARTMENTS = [
@@ -55,6 +56,7 @@ function DoctorsDirectoryContent() {
   const [selectedDept, setSelectedDept] = useState(initialDept);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDoctorForBooking, setSelectedDoctorForBooking] = useState<Doctor | null>(null);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -230,22 +232,27 @@ function DoctorsDirectoryContent() {
                     </p>
                   </div>
 
-                  <Link
-                    href="/login"
-                    className={cn(
-                      buttonVariants({ size: "sm" }),
-                      "bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm shrink-0 whitespace-nowrap"
-                    )}
+                  <Button
+                    size="sm"
+                    onClick={() => setSelectedDoctorForBooking(doctor)}
+                    className="bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm shrink-0 whitespace-nowrap cursor-pointer"
                   >
                     Book Serial
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                  </Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       )}
+
+      {/* Interactive Appointment Booking Dialog */}
+      <BookAppointmentDialog
+        doctor={selectedDoctorForBooking}
+        isOpen={selectedDoctorForBooking !== null}
+        onClose={() => setSelectedDoctorForBooking(null)}
+      />
     </div>
   );
 }

@@ -44,3 +44,4 @@ export interface AuthResponseData {
 }
 
 export * from "./doctor";
+export * from "./appointment";

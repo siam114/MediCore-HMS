@@ -1164,7 +1164,7 @@ export default function HomePage() {
                   </div>
 
                   <Link
-                    href="/login"
+                    href={`/doctors?search=${encodeURIComponent(doc.name)}`}
                     className="inline-flex items-center justify-center rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs px-4 py-2 shadow-sm hover:shadow-md transition-all active:scale-95"
                   >
                     Book Serial

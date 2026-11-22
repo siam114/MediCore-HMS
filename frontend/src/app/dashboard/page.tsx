@@ -33,8 +33,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
-import { authService, doctorService } from "@/services/api";
-import type { UserSession, Doctor } from "@/types";
+import { authService, doctorService, appointmentService } from "@/services/api";
+import type { UserSession, Doctor, Appointment } from "@/types";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -43,8 +43,10 @@ export default function DashboardPage() {
   const { user, token, isAuthenticated, isLoading, clearAuth, initialize } = useAuthStore();
   const [allUsers, setAllUsers] = useState<UserSession[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [isDoctorsLoading, setIsDoctorsLoading] = useState(false);
+  const [isAppointmentsLoading, setIsAppointmentsLoading] = useState(false);
 
   // Add Doctor Form state
   const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
@@ -93,11 +95,43 @@ export default function DashboardPage() {
           }
         })
         .catch(console.error);
+
+      appointmentService
+        .getAll()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setAppointments(res.data.appointments);
+          }
+        })
+        .catch(console.error);
+    } else if (user?.role === "PATIENT") {
+      appointmentService
+        .getMy()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setAppointments(res.data.appointments);
+          }
+        })
+        .catch(console.error);
     }
     return () => {
       isSubscribed = false;
     };
   }, [user?.role]);
+
+  const handleUpdateAppointmentStatus = async (id: string, newStatus: string) => {
+    try {
+      const res = await appointmentService.updateStatus(id, newStatus);
+      if (res.success) {
+        toast.success(`Appointment status updated to ${newStatus}`);
+        setAppointments((prev) =>
+          prev.map((a) => (a.id === id ? { ...a, status: newStatus as any } : a))
+        );
+      }
+    } catch (err: any) {
+      toast.error("Failed to update status", { description: err.message });
+    }
+  };
 
   const fetchUsers = async () => {
     setIsUsersLoading(true);
@@ -291,7 +325,7 @@ export default function DashboardPage() {
 
         {/* If ADMIN: Show Hospital Statistics Cards */}
         {user.role === "ADMIN" && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
               <CardContent className="p-4 flex items-center justify-between">
                 <div>
@@ -344,6 +378,20 @@ export default function DashboardPage() {
                 </div>
                 <div className="h-10 w-10 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-600">
                   <Users className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm col-span-2 sm:col-span-1">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Booked Serials</p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    {appointments.length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600">
+                  <Calendar className="h-5 w-5" />
                 </div>
               </CardContent>
             </Card>
@@ -524,6 +572,135 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Appointments Section (Available for both ADMIN and PATIENTS) */}
+        <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-teal-600" />
+                {user.role === "ADMIN" ? "Patient Appointments & Serials" : "My Consultation Appointments"}
+              </CardTitle>
+              <CardDescription>
+                {user.role === "ADMIN"
+                  ? "Live registry of all patient doctor appointments booked through the portal"
+                  : "Your scheduled doctor visits, chamber rooms, and consultation tokens"}
+              </CardDescription>
+            </div>
+            {user.role === "PATIENT" && (
+              <Link
+                href="/doctors"
+                className={cn(buttonVariants({ size: "sm" }), "bg-teal-600 hover:bg-teal-700 text-white text-xs gap-1.5")}
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Book New Serial
+              </Link>
+            )}
+          </CardHeader>
+          <CardContent>
+            {appointments.length === 0 ? (
+              <div className="text-center py-10 space-y-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg">
+                <Calendar className="h-8 w-8 text-slate-300 mx-auto" />
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">No appointments recorded yet.</p>
+                <p className="text-xs text-slate-400">
+                  {user.role === "ADMIN"
+                    ? "Patient bookings will appear here in real time."
+                    : "Visit the Doctor Directory to book a specialist serial."}
+                </p>
+                {user.role === "PATIENT" && (
+                  <div className="pt-2">
+                    <Link
+                      href="/doctors"
+                      className={cn(buttonVariants({ size: "sm" }), "bg-teal-600 hover:bg-teal-700 text-white text-xs")}
+                    >
+                      Browse Specialist Doctors
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-slate-100 dark:border-slate-800">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-xs font-semibold text-slate-600 uppercase dark:bg-slate-900/60 dark:text-slate-400">
+                    <tr>
+                      <th className="px-4 py-3">Token Serial</th>
+                      <th className="px-4 py-3">Patient Details</th>
+                      <th className="px-4 py-3">Physician / Chamber</th>
+                      <th className="px-4 py-3">Date & Time</th>
+                      <th className="px-4 py-3">Fee</th>
+                      <th className="px-4 py-3">Status</th>
+                      {user.role === "ADMIN" && <th className="px-4 py-3 text-right">Actions</th>}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                    {appointments.map((apt) => (
+                      <tr key={apt.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
+                        <td className="px-4 py-3 font-mono font-bold text-teal-700 dark:text-teal-400">
+                          {apt.serialNumber}
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-bold text-slate-900 dark:text-slate-100">{apt.patientName}</p>
+                          <p className="text-slate-400">{apt.patientPhone} • {apt.patientGender}, {apt.patientAge}y</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-semibold text-slate-800 dark:text-slate-200">{apt.doctorName}</p>
+                          <p className="text-slate-400">{apt.doctorDepartment} ({apt.roomNumber})</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-medium text-slate-800 dark:text-slate-200">{apt.appointmentDate}</p>
+                          <p className="text-slate-400">{apt.appointmentTime}</p>
+                        </td>
+                        <td className="px-4 py-3 font-bold text-slate-900 dark:text-slate-100">
+                          ৳{apt.consultationFee.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold",
+                              apt.status === "CONFIRMED"
+                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"
+                                : apt.status === "COMPLETED"
+                                ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300"
+                                : apt.status === "CANCELLED"
+                                ? "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300"
+                                : "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300"
+                            )}
+                          >
+                            {apt.status}
+                          </span>
+                        </td>
+                        {user.role === "ADMIN" && (
+                          <td className="px-4 py-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {apt.status !== "COMPLETED" && (
+                                <button
+                                  onClick={() => handleUpdateAppointmentStatus(apt.id, "COMPLETED")}
+                                  className="rounded px-2 py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/50"
+                                  title="Mark as Completed"
+                                >
+                                  Complete
+                                </button>
+                              )}
+                              {apt.status !== "CANCELLED" && (
+                                <button
+                                  onClick={() => handleUpdateAppointmentStatus(apt.id, "CANCELLED")}
+                                  className="rounded px-2 py-1 text-[11px] font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50"
+                                  title="Cancel Appointment"
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* User Profile & Session Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

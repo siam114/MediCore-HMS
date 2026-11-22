@@ -2,6 +2,7 @@ import { Router } from "express";
 import { isDbConnected, getDb } from "../config/db";
 import authRoutes from "./auth.routes";
 import doctorRoutes from "./doctor.routes";
+import appointmentRoutes from "./appointment.routes";
 
 const router = Router();
 
@@ -31,5 +32,8 @@ router.use("/auth", authRoutes);
 
 // Doctor management routes
 router.use("/doctors", doctorRoutes);
+
+// Appointment & Serial booking routes
+router.use("/appointments", appointmentRoutes);
 
 export default router;

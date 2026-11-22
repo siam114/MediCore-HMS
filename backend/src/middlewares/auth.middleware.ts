@@ -73,6 +73,51 @@ export async function authenticate(
 }
 
 /**
+ * Optional authentication middleware:
+ * Populates req.user if a valid token is provided, but does not block unauthenticated users.
+ */
+export async function optionalAuthenticate(
+  req: AuthenticatedRequest,
+  _res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    let token: string | undefined;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) {
+      return next();
+    }
+
+    const decoded = verifyToken(token);
+    if (!decoded || !ObjectId.isValid(decoded.userId)) {
+      return next();
+    }
+
+    const users = getUsersCollection();
+    const user = await users.findOne({ _id: new ObjectId(decoded.userId) });
+    if (user && user.status === "ACTIVE") {
+      req.user = {
+        id: user._id!.toString(),
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        phone: user.phone,
+        status: user.status,
+      };
+    }
+    next();
+  } catch {
+    next();
+  }
+}
+
+/**
  * Role-Based Access Control (RBAC) middleware
  * e.g. authorize(USER_ROLES.ADMIN, USER_ROLES.DOCTOR)
  */
