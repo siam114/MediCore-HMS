@@ -411,13 +411,13 @@ export function BookAppointmentDialog({
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="h-10 px-4 text-xs font-semibold"
+                className="h-11 px-5 rounded-xl text-xs font-bold"
               >
                 Cancel
               </Button>
@@ -425,7 +425,7 @@ export function BookAppointmentDialog({
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-10 px-6 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20"
+                className="h-11 px-7 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/25 transition-all hover:scale-[1.02]"
               >
                 {isSubmitting ? (
                   <>

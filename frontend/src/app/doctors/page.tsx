@@ -238,7 +238,7 @@ function DoctorsDirectoryContent() {
                   <Button
                     size="sm"
                     onClick={() => setSelectedDoctorForBooking(doctor)}
-                    className="bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm shrink-0 whitespace-nowrap cursor-pointer"
+                    className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4.5 py-2.5 text-xs rounded-xl shadow-md shadow-teal-600/25 shrink-0 whitespace-nowrap cursor-pointer transition-all hover:scale-[1.02]"
                   >
                     Book Serial
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />

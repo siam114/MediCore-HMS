@@ -474,13 +474,19 @@ export function CreatePrescriptionDialog({
 
           {/* Submit Actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold"
+            >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-teal-600 hover:bg-teal-700 text-white min-w-44 shadow-md shadow-teal-600/20"
+              className="h-11 px-7 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/25 transition-all hover:scale-[1.02] cursor-pointer"
             >
               {isSubmitting ? (
                 <>

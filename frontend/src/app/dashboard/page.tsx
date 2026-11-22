@@ -371,7 +371,7 @@ export default function DashboardPage() {
               variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-red-900/40 dark:hover:bg-red-950/30"
+              className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-red-900/40 dark:hover:bg-red-950/30 px-3.5 py-1.5 h-9 rounded-xl font-semibold"
             >
               <LogOut className="h-4 w-4 mr-1.5" />
               Sign Out
@@ -873,7 +873,7 @@ export default function DashboardPage() {
                                     <Button
                                       size="sm"
                                       onClick={() => handleOpenCreateRx(apt)}
-                                      className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold"
+                                      className="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3.5 py-1.5 h-8.5 rounded-lg gap-1.5 shadow-xs font-bold cursor-pointer transition-all hover:scale-[1.02]"
                                     >
                                       <FileText className="h-3.5 w-3.5" />
                                       Write Prescription
@@ -885,7 +885,7 @@ export default function DashboardPage() {
                                           size="sm"
                                           variant="outline"
                                           onClick={() => handleOpenViewRx(linkedRx)}
-                                          className="text-teal-700 border-teal-200 hover:bg-teal-50 dark:text-teal-300 dark:border-teal-800 text-[11px] h-7 gap-1"
+                                          className="text-teal-700 border-teal-200 hover:bg-teal-50 dark:text-teal-300 dark:border-teal-800 text-xs px-3 py-1.5 h-8.5 rounded-lg gap-1.5 font-semibold cursor-pointer"
                                         >
                                           <FileText className="h-3 w-3" />
                                           View Rx
@@ -1067,7 +1067,7 @@ export default function DashboardPage() {
                           <Button
                             size="sm"
                             onClick={() => handleOpenViewRx(rx)}
-                            className="bg-teal-600 hover:bg-teal-700 text-white text-[11px] h-7 gap-1 shadow-xs font-semibold cursor-pointer"
+                            className="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3.5 py-1.5 h-8.5 rounded-lg gap-1.5 shadow-xs font-bold cursor-pointer transition-all hover:scale-[1.02]"
                           >
                             <FileText className="h-3 w-3" />
                             View / Download PDF
