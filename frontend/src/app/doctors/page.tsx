@@ -20,6 +20,10 @@ import {
   Menu,
   X,
   ChevronRight,
+  Sparkles,
+  Microscope,
+  Users,
+  FileText,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -347,80 +351,225 @@ export default function DoctorsDirectoryPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="sm:hidden inline-flex items-center justify-center h-8.5 w-8.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+              className="sm:hidden inline-flex items-center justify-center h-8.5 w-8.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition-colors cursor-pointer shrink-0"
               aria-label="Open Navigation Sidebar"
+              aria-expanded={mobileMenuOpen}
             >
               <Menu className="h-5 w-5" />
             </button>
           </div>
         </div>
+      </header>
 
-        {/* Backdrop */}
-        <div
-          className={cn(
-            "fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 sm:hidden",
-            mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          )}
-          onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
+      {/* ========================================================================= */}
+      {/* MOBILE & TABLET SLIDE-OVER SIDEBAR DRAWER - STANDALONE VIEWPORT           */}
+      {/* ========================================================================= */}
+      {/* Backdrop */}
+      <div
+        className={cn(
+          "fixed inset-0 z-[99] bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 sm:hidden",
+          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setMobileMenuOpen(false)}
+        aria-hidden="true"
+      />
 
-        {/* Slide-over Sidebar Drawer */}
-        <aside
-          className={cn(
-            "fixed top-0 bottom-0 right-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 ease-in-out sm:hidden",
-            mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          )}
-        >
-          <div className="flex items-center justify-between px-4 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
-            <span className="font-bold text-sm text-slate-900 dark:text-slate-100">MediCore Navigation</span>
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-1 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-200/50"
+      {/* Slide-over Sidebar Drawer */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 right-0 z-[100] w-full max-w-[320px] sm:max-w-[380px] h-screen h-dvh bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 ease-in-out sm:hidden",
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Hospital Navigation Menu"
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 shrink-0">
+              <Activity className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-slate-50">
+                MediCore HMS
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                Clinical Registry & Portal
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(false)}
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 dark:hover:bg-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer shrink-0"
+            aria-label="Close Navigation Sidebar"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Navigation Body */}
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-4">
+          {/* Emergency Card */}
+          <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/70 p-3.5 border border-rose-200 dark:from-rose-950/40 dark:to-rose-900/20 dark:border-rose-900/60 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400">
+                <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                24/7 Ambulance Line
+              </span>
+              <span className="rounded-full bg-rose-600 text-white text-[9px] font-bold px-2 py-0.5">
+                10666
+              </span>
+            </div>
+            <a
+              href="tel:10666"
+              className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition-colors"
             >
-              <X className="h-5 w-5" />
-            </button>
+              <Phone className="h-3.5 w-3.5" />
+              Call Emergency Ambulance
+            </a>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-2 text-sm font-semibold">
+          {/* Full Hospital Navigation Links */}
+          <div className="space-y-1">
+            <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              Hospital Exploration
+            </p>
+
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-teal-50 hover:text-teal-700 text-slate-700 dark:text-slate-200"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
             >
-              <span>Main Hospital Portal</span>
-              <ChevronRight className="h-4 w-4" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <Activity className="h-4 w-4" />
+                </div>
+                <span>Main Hospital Home</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
             </Link>
+
+            <Link
+              href="/doctors"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold bg-teal-50/80 text-teal-700 dark:bg-teal-950/60 dark:text-teal-300"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-white">
+                  <Stethoscope className="h-4 w-4" />
+                </div>
+                <span>Find Specialist Doctors</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-teal-600" />
+            </Link>
+
+            <Link
+              href="/#departments"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <HeartPulse className="h-4 w-4" />
+                </div>
+                <span>Clinical Specialties & Centers</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
+            </Link>
+
+            <Link
+              href="/#health-packages"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <span>Preventive Health Packages</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
+            </Link>
+
+            <Link
+              href="/#technology"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <Microscope className="h-4 w-4" />
+                </div>
+                <span>Hospital Technology & OTs</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
+            </Link>
+
+            <Link
+              href="/#emergency-unit"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-700 hover:bg-rose-50/80 dark:text-rose-400 dark:hover:bg-rose-950/30 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
+                  <Ambulance className="h-4 w-4" />
+                </div>
+                <span>24/7 Emergency & ICU Care</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-rose-400 group-hover:text-rose-600" />
+            </Link>
+
+            <Link
+              href="/#patient-care"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <Users className="h-4 w-4" />
+                </div>
+                <span>Patient Guide & Admission</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
+            </Link>
+
+            <Link
+              href="/#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-800 hover:text-teal-700 hover:bg-teal-50/80 dark:text-slate-100 dark:hover:bg-slate-800/80 dark:hover:text-teal-300 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-600 dark:bg-teal-950 dark:text-teal-400">
+                  <FileText className="h-4 w-4" />
+                </div>
+                <span>Frequently Asked Questions</span>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-teal-600" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Drawer Footer Actions */}
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80 space-y-2.5 shrink-0">
+          <div className="grid grid-cols-2 gap-2">
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-teal-50 hover:text-teal-700 text-slate-700 dark:text-slate-200"
+              className="flex items-center justify-center py-2.5 px-3 rounded-xl border border-slate-300 dark:border-slate-700 font-semibold text-xs text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors"
             >
-              <span>Portal Sign In</span>
-              <ChevronRight className="h-4 w-4" />
+              Portal Sign In
             </Link>
             <Link
               href="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-teal-50 hover:text-teal-700 text-slate-700 dark:text-slate-200"
+              className="flex items-center justify-center py-2.5 px-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs transition-colors shadow-xs"
             >
-              <span>Register as Patient</span>
-              <ChevronRight className="h-4 w-4" />
+              Register Patient
             </Link>
           </div>
-
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-            <a
-              href="tel:10666"
-              className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs shadow-xs"
-            >
-              <Phone className="h-3.5 w-3.5" />
-              Emergency 10666
-            </a>
-          </div>
-        </aside>
-      </header>
+        </div>
+      </aside>
 
       {/* Content Wrapped in Suspense */}
       <Suspense fallback={
