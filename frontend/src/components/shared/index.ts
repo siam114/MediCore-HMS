@@ -1,2 +1,1 @@
-// Export shared UI components across the application
-export {};
+export * from "./MediCoreLogo";

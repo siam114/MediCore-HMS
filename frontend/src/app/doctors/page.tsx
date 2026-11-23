@@ -33,6 +33,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/services/api";
 import { BookAppointmentDialog } from "@/components/appointments/BookAppointmentDialog";
+import { MediCoreLogoIcon } from "@/components/shared";
 import type { Doctor } from "@/types";
 
 const DEPARTMENTS = [
@@ -311,9 +312,7 @@ export default function DoctorsDirectoryPage() {
             title="Back to MediCore Homepage"
             className="flex items-center gap-2 sm:gap-3 group cursor-pointer hover:opacity-90 transition-opacity min-w-0"
           >
-            <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors shrink-0">
-              <Activity className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
+            <MediCoreLogoIcon size={38} className="sm:w-[42px] sm:h-[42px] group-hover:scale-105 transition-transform shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-base sm:text-xl font-black text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
@@ -386,9 +385,7 @@ export default function DoctorsDirectoryPage() {
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 shrink-0">
-              <Activity className="h-5 w-5" />
-            </div>
+            <MediCoreLogoIcon size={36} className="shrink-0" />
             <div className="min-w-0">
               <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-slate-50">
                 MediCore HMS

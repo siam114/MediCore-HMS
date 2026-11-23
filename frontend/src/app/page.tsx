@@ -47,6 +47,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { MediCoreLogoIcon } from "@/components/shared";
 
 // 1. Core Clinical Centers of Excellence
 const CLINICAL_DEPARTMENTS = [
@@ -452,9 +453,7 @@ export default function HomePage() {
             className="flex items-center gap-2 sm:gap-3 group shrink-0 cursor-pointer min-w-0"
             title="MediCore Hospitals - Back to Top / Home"
           >
-            <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-all shrink-0">
-              <Activity className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
+            <MediCoreLogoIcon size={38} className="sm:w-[42px] sm:h-[42px] group-hover:scale-105 transition-transform shrink-0" />
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-base sm:text-xl 2xl:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50 font-sans truncate">
@@ -585,9 +584,7 @@ export default function HomePage() {
         {/* Drawer Top Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 shrink-0">
-              <Activity className="h-5 w-5" />
-            </div>
+            <MediCoreLogoIcon size={36} className="shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-slate-50">
@@ -1672,9 +1669,7 @@ export default function HomePage() {
             {/* Col 1 */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md">
-                  <Activity className="h-6 w-6" />
-                </div>
+                <MediCoreLogoIcon size={42} className="shrink-0" />
                 <div>
                   <span className="text-xl font-black text-white tracking-tight">MediCore Hospitals</span>
                   <p className="text-xs text-teal-400 font-medium">Tertiary Care & Specialist Research Center</p>

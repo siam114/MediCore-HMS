@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { jsPDF } from "jspdf";
+import { MediCoreLogoIcon } from "@/components/shared";
 import type { BillingInvoice } from "@/types/billing";
 
 interface ViewCashMemoDialogProps {
@@ -369,9 +370,7 @@ export function ViewCashMemoDialog({
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <div className="h-7 w-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-sm">
-                        M
-                      </div>
+                      <MediCoreLogoIcon size={30} className="shrink-0" />
                       <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                         MediCore Super Speciality Hospital
                       </h1>

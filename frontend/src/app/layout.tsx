@@ -14,6 +14,11 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "MediCore – Tertiary Care Hospital & Research Center",
   description: "Next-generation healthcare management portal, online specialist doctor appointments, emergency 24/7 patient services, and clinical research.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

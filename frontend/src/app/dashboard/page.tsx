@@ -57,6 +57,7 @@ import { CreateLabReportDialog } from "@/components/labReports/CreateLabReportDi
 import { ViewLabReportDialog } from "@/components/labReports/ViewLabReportDialog";
 import { CreateInvoiceDialog } from "@/components/billing/CreateInvoiceDialog";
 import { ViewCashMemoDialog } from "@/components/billing/ViewCashMemoDialog";
+import { MediCoreLogoIcon } from "@/components/shared";
 import { FlaskConical } from "lucide-react";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -546,9 +547,7 @@ export default function DashboardPage() {
             title="Back to MediCore Homepage"
             className="flex items-center gap-2.5 group cursor-pointer hover:opacity-90 transition-opacity"
           >
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors shrink-0">
-              <Activity className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
+            <MediCoreLogoIcon size={38} className="group-hover:scale-105 transition-transform shrink-0" />
             <div className="min-w-0">
               <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
                 MediCore HMS

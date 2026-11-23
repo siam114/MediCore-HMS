@@ -25,6 +25,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { registerSchema, type RegisterFormValues } from "@/lib/validations";
 import { authService } from "@/services/api";
 import { useAuthStore } from "@/store";
+import { MediCoreLogoIcon } from "@/components/shared";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -189,8 +190,8 @@ export default function RegisterPage() {
           title="Back to MediCore Homepage"
           className="block text-center space-y-2 group cursor-pointer hover:opacity-95 transition-opacity"
         >
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-600/30 group-hover:bg-teal-700 transition-colors">
-            <Activity className="h-6 w-6" />
+          <div className="inline-flex items-center justify-center group-hover:scale-105 transition-transform">
+            <MediCoreLogoIcon size={52} />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
             MediCore HMS
