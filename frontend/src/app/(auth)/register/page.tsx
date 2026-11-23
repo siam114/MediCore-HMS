@@ -78,8 +78,59 @@ export default function RegisterPage() {
 
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-      // If Google Identity Services is available and Client ID is set
-      if (typeof window !== "undefined" && (window as any).google?.accounts?.id && clientId) {
+      if (!clientId) {
+        toast.info("Google OAuth 2.0 Integration", {
+          description: "Google Client ID is not configured. Please ensure NEXT_PUBLIC_GOOGLE_CLIENT_ID is set in .env.local.",
+        });
+        setIsGoogleLoading(false);
+        return;
+      }
+
+      // 1. Google Identity Services OAuth 2.0 Token Client (Authentic Google Account Selector Popup)
+      if (typeof window !== "undefined" && (window as any).google?.accounts?.oauth2) {
+        const tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: "email profile openid",
+          callback: async (tokenResponse: any) => {
+            if (tokenResponse.error) {
+              setIsGoogleLoading(false);
+              return;
+            }
+            try {
+              const userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+              });
+              const userInfo = await userInfoRes.json();
+
+              const res = await authService.googleAuth({
+                name: userInfo.name || userInfo.email.split("@")[0],
+                email: userInfo.email,
+                avatar: userInfo.picture || "",
+                googleId: userInfo.sub,
+              });
+
+              if (res.success && res.data) {
+                setAuth(res.data.user, res.data.token);
+                toast.success(`Welcome to MediCore, ${res.data.user.name}!`, {
+                  description: "Signed up and logged in with your verified Google account",
+                });
+                router.push("/dashboard");
+              }
+            } catch (err: unknown) {
+              const msg = err instanceof Error ? err.message : "Failed to sign up with Google";
+              toast.error("Google Sign Up Failed", { description: msg });
+            } finally {
+              setIsGoogleLoading(false);
+            }
+          },
+        });
+
+        tokenClient.requestAccessToken();
+        return;
+      }
+
+      // 2. Fallback: Google Identity Services ID Token (One Tap / Credential)
+      if (typeof window !== "undefined" && (window as any).google?.accounts?.id) {
         (window as any).google.accounts.id.initialize({
           client_id: clientId,
           callback: async (response: any) => {
@@ -116,8 +167,8 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.info("Google OAuth 2.0 Integration", {
-        description: "To connect real Google account popup, add NEXT_PUBLIC_GOOGLE_CLIENT_ID to your environment variables.",
+      toast.error("Google Services Initializing", {
+        description: "Google Sign-In SDK is initializing. Please wait a moment and try again.",
       });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Google authentication failed";
