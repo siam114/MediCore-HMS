@@ -28,6 +28,10 @@ import {
   FileText,
   Eye,
   EyeOff,
+  Receipt,
+  CreditCard,
+  Banknote,
+  DollarSign,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -37,12 +41,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
-import { authService, doctorService, appointmentService, prescriptionService, labReportService } from "@/services/api";
+import {
+  authService,
+  doctorService,
+  appointmentService,
+  prescriptionService,
+  labReportService,
+  billingService,
+} from "@/services/api";
 import type { UserSession, Doctor, Appointment, Prescription, LabReport } from "@/types";
+import type { BillingInvoice, BillingStatsSummary, PaymentStatus } from "@/types/billing";
 import { CreatePrescriptionDialog } from "@/components/prescriptions/CreatePrescriptionDialog";
 import { ViewPrescriptionDialog } from "@/components/prescriptions/ViewPrescriptionDialog";
 import { CreateLabReportDialog } from "@/components/labReports/CreateLabReportDialog";
 import { ViewLabReportDialog } from "@/components/labReports/ViewLabReportDialog";
+import { CreateInvoiceDialog } from "@/components/billing/CreateInvoiceDialog";
+import { ViewCashMemoDialog } from "@/components/billing/ViewCashMemoDialog";
 import { FlaskConical } from "lucide-react";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -73,6 +87,16 @@ export default function DashboardPage() {
   const [showCreateLabReportModal, setShowCreateLabReportModal] = useState(false);
   const [showViewLabReportModal, setShowViewLabReportModal] = useState(false);
   const [selectedLabReportForView, setSelectedLabReportForView] = useState<LabReport | null>(null);
+
+  // Billing & Invoicing states
+  const [invoices, setInvoices] = useState<BillingInvoice[]>([]);
+  const [billingStats, setBillingStats] = useState<BillingStatsSummary | null>(null);
+  const [isBillingLoading, setIsBillingLoading] = useState(false);
+  const [showCreateInvoiceModal, setShowCreateInvoiceModal] = useState(false);
+  const [showViewInvoiceModal, setShowViewInvoiceModal] = useState(false);
+  const [selectedInvoiceForView, setSelectedInvoiceForView] = useState<BillingInvoice | null>(null);
+  const [billingSearchQuery, setBillingSearchQuery] = useState("");
+  const [billingStatusFilter, setBillingStatusFilter] = useState<PaymentStatus | "ALL">("ALL");
 
   // Add Doctor Form state
   const [showAddDoctorModal, setShowAddDoctorModal] = useState(false);
@@ -148,6 +172,24 @@ export default function DashboardPage() {
         .then((res) => {
           if (isSubscribed && res.success && res.data) {
             setLabReports(res.data.reports);
+          }
+        })
+        .catch(console.error);
+
+      billingService
+        .getAll()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setInvoices(res.data.invoices);
+          }
+        })
+        .catch(console.error);
+
+      billingService
+        .getStats()
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setBillingStats(res.data.stats);
           }
         })
         .catch(console.error);
@@ -257,6 +299,57 @@ export default function DashboardPage() {
       labReportService.getByDoctor(currentDoctor.id).then((res) => res.success && res.data && setLabReports(res.data.reports));
     } else {
       labReportService.getMy().then((res) => res.success && res.data && setLabReports(res.data.reports));
+    }
+  };
+
+  const fetchInvoices = () => {
+    setIsBillingLoading(true);
+    billingService
+      .getAll()
+      .then((res) => {
+        if (res.success && res.data) {
+          setInvoices(res.data.invoices);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setIsBillingLoading(false));
+
+    billingService
+      .getStats()
+      .then((res) => {
+        if (res.success && res.data) {
+          setBillingStats(res.data.stats);
+        }
+      })
+      .catch(console.error);
+  };
+
+  const handleOpenViewInvoice = (invoice: BillingInvoice) => {
+    setSelectedInvoiceForView(invoice);
+    setShowViewInvoiceModal(true);
+  };
+
+  const handleInvoiceCreated = (newInv: BillingInvoice) => {
+    setInvoices((prev) => [newInv, ...prev]);
+    setSelectedInvoiceForView(newInv);
+    setShowViewInvoiceModal(true);
+    fetchInvoices();
+  };
+
+  const handleRecordQuickPayment = async (inv: BillingInvoice) => {
+    if (inv.dueAmount <= 0) return;
+    try {
+      const res = await billingService.recordPayment(inv.id, {
+        additionalPaid: inv.dueAmount,
+        paymentMethod: "CASH",
+        transactionId: "COUNTER-SETTLED-CASH",
+      });
+      if (res.success && res.data) {
+        toast.success(`Due amount of BDT ${inv.dueAmount.toLocaleString("en-BD")} cleared successfully!`);
+        fetchInvoices();
+      }
+    } catch {
+      toast.error("Failed to record payment");
     }
   };
 
@@ -1344,6 +1437,262 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Hospital Billing, Invoicing & Digital Cash Memo Section */}
+        <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 gap-3">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Receipt className="h-5 w-5 text-teal-600" />
+                {user.role === "PATIENT"
+                  ? "My Hospital Billing Invoices & Cash Memos"
+                  : "Hospital Billing, Invoicing & Digital Cash Memo (Accounts)"}
+              </CardTitle>
+              <CardDescription>
+                {user.role === "PATIENT"
+                  ? "View your itemized consultation, lab test, and admission bills with official money receipts"
+                  : "Manage hospital financial accounts, OPD/IPD billings, payment collection, and printable cash memos"}
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchInvoices}
+                disabled={isBillingLoading}
+                className="gap-1.5 text-xs cursor-pointer"
+              >
+                <RefreshCw className={cn("h-3.5 w-3.5", isBillingLoading && "animate-spin")} />
+                Refresh
+              </Button>
+              {(user.role === "ADMIN" || user.role === "STAFF") && (
+                <Button
+                  size="sm"
+                  onClick={() => setShowCreateInvoiceModal(true)}
+                  className="gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold shadow-sm cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  + Create Cash Memo
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Revenue Analytics Cards (Admin & Staff only) */}
+            {(user.role === "ADMIN" || user.role === "STAFF") && billingStats && (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="rounded-xl border border-teal-100 bg-teal-50/50 p-3.5 dark:border-teal-900/50 dark:bg-teal-950/20">
+                  <div className="flex items-center justify-between text-xs text-teal-700 dark:text-teal-400 font-medium">
+                    <span>Total Revenue</span>
+                    <Banknote className="h-4 w-4" />
+                  </div>
+                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100 font-mono">
+                    BDT {billingStats.totalCollected.toLocaleString("en-BD")}
+                  </p>
+                  <span className="text-[10px] text-teal-600 font-semibold">{billingStats.paidCount} Fully Paid</span>
+                </div>
+
+                <div className="rounded-xl border border-sky-100 bg-sky-50/50 p-3.5 dark:border-sky-900/50 dark:bg-sky-950/20">
+                  <div className="flex items-center justify-between text-xs text-sky-700 dark:text-sky-400 font-medium">
+                    <span>Total Invoiced</span>
+                    <Receipt className="h-4 w-4" />
+                  </div>
+                  <p className="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100 font-mono">
+                    BDT {billingStats.totalInvoiced.toLocaleString("en-BD")}
+                  </p>
+                  <span className="text-[10px] text-sky-600 font-semibold">{billingStats.totalInvoices} Invoices Generated</span>
+                </div>
+
+                <div className="rounded-xl border border-rose-100 bg-rose-50/50 p-3.5 dark:border-rose-900/50 dark:bg-rose-950/20">
+                  <div className="flex items-center justify-between text-xs text-rose-700 dark:text-rose-400 font-medium">
+                    <span>Outstanding Dues</span>
+                    <CreditCard className="h-4 w-4" />
+                  </div>
+                  <p className="mt-1 text-xl font-bold text-rose-600 font-mono">
+                    BDT {billingStats.totalDue.toLocaleString("en-BD")}
+                  </p>
+                  <span className="text-[10px] text-rose-500 font-semibold">{billingStats.partialCount + billingStats.unpaidCount} Pending Collection</span>
+                </div>
+
+                <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-3.5 dark:border-purple-900/50 dark:bg-purple-950/20">
+                  <div className="flex items-center justify-between text-xs text-purple-700 dark:text-purple-400 font-medium">
+                    <span>Today&apos;s Collection</span>
+                    <DollarSign className="h-4 w-4" />
+                  </div>
+                  <p className="mt-1 text-xl font-bold text-purple-700 dark:text-purple-300 font-mono">
+                    BDT {billingStats.todayCollection.toLocaleString("en-BD")}
+                  </p>
+                  <span className="text-[10px] text-purple-600 font-semibold">Live Realtime Settlement</span>
+                </div>
+              </div>
+            )}
+
+            {/* Filter and Search Bar */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {(["ALL", "PAID", "PARTIAL", "UNPAID"] as const).map((st) => (
+                  <Button
+                    key={st}
+                    variant={billingStatusFilter === st ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setBillingStatusFilter(st)}
+                    className={cn(
+                      "h-8 text-xs font-semibold cursor-pointer",
+                      billingStatusFilter === st
+                        ? "bg-teal-600 hover:bg-teal-700 text-white"
+                        : "text-slate-600 dark:text-slate-300"
+                    )}
+                  >
+                    {st === "ALL" ? "All Invoices" : st}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="w-full sm:w-64">
+                <Input
+                  placeholder="Search invoice, patient, doctor..."
+                  value={billingSearchQuery}
+                  onChange={(e) => setBillingSearchQuery(e.target.value)}
+                  className="h-8.5 text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Table of Invoices */}
+            {invoices.length === 0 ? (
+              <div className="text-center py-10 space-y-2 border border-dashed rounded-xl border-slate-200 dark:border-slate-800">
+                <Receipt className="h-10 w-10 text-slate-300 mx-auto" />
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                  No billing invoices found.
+                </p>
+                <p className="text-xs text-slate-400">
+                  Official money receipts and bills will appear here with instant A4 print & PDF download.
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-slate-50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-800">
+                    <tr>
+                      <th className="px-4 py-3">INVOICE NUMBER</th>
+                      <th className="px-4 py-3">PATIENT DETAILS</th>
+                      <th className="px-4 py-3">SERVICES / ITEMS</th>
+                      <th className="px-4 py-3 text-right">TOTAL (BDT)</th>
+                      <th className="px-4 py-3 text-right">PAID / DUE</th>
+                      <th className="px-4 py-3 text-center">PAYMENT</th>
+                      <th className="px-4 py-3 text-center">STATUS</th>
+                      <th className="px-4 py-3 text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {invoices
+                      .filter((inv) => {
+                        if (billingStatusFilter !== "ALL" && inv.paymentStatus !== billingStatusFilter) {
+                          return false;
+                        }
+                        if (billingSearchQuery.trim()) {
+                          const q = billingSearchQuery.toLowerCase();
+                          return (
+                            inv.invoiceNumber.toLowerCase().includes(q) ||
+                            inv.patientName.toLowerCase().includes(q) ||
+                            inv.patientPhone.toLowerCase().includes(q) ||
+                            (inv.referredDoctorName && inv.referredDoctorName.toLowerCase().includes(q))
+                          );
+                        }
+                        return true;
+                      })
+                      .map((inv) => (
+                        <tr key={inv.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors">
+                          <td className="px-4 py-3">
+                            <span className="font-mono font-bold text-teal-700 dark:text-teal-400 block">
+                              {inv.invoiceNumber}
+                            </span>
+                            <span className="text-[11px] text-slate-400">
+                              {new Date(inv.billingDate || inv.createdAt).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <p className="font-bold text-slate-900 dark:text-slate-100">{inv.patientName}</p>
+                            <p className="text-slate-400">{inv.patientPhone} {inv.patientAge ? `• ${inv.patientAge}y` : ""}</p>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="font-medium text-slate-800 dark:text-slate-200 block truncate max-w-xs">
+                              {inv.items[0]?.description}
+                            </span>
+                            {inv.items.length > 1 && (
+                              <span className="text-[10px] text-teal-600 font-semibold">
+                                + {inv.items.length - 1} more service{inv.items.length > 2 ? "s" : ""}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                            {inv.grandTotal.toLocaleString("en-BD")}
+                          </td>
+                          <td className="px-4 py-3 text-right font-mono">
+                            <span className="text-emerald-600 font-semibold block">
+                              {inv.paidAmount.toLocaleString("en-BD")}
+                            </span>
+                            {inv.dueAmount > 0 ? (
+                              <span className="text-rose-500 font-bold block text-[11px]">
+                                Due: {inv.dueAmount.toLocaleString("en-BD")}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-slate-400 block">Nil</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                              {inv.paymentMethod}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <Badge
+                              variant="outline"
+                              className={
+                                inv.paymentStatus === "PAID"
+                                  ? "border-emerald-300 bg-emerald-50 text-emerald-700 font-bold text-[10px]"
+                                  : inv.paymentStatus === "PARTIAL"
+                                  ? "border-amber-300 bg-amber-50 text-amber-700 font-bold text-[10px]"
+                                  : "border-rose-300 bg-rose-50 text-rose-700 font-bold text-[10px]"
+                              }
+                            >
+                              {inv.paymentStatus}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleOpenViewInvoice(inv)}
+                                className="h-7.5 px-2.5 text-xs text-teal-700 border-teal-200 hover:bg-teal-50 dark:border-teal-900 dark:text-teal-300 cursor-pointer"
+                              >
+                                View Memo
+                              </Button>
+                              {(user.role === "ADMIN" || user.role === "STAFF") && inv.dueAmount > 0 && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleRecordQuickPayment(inv)}
+                                  className="h-7.5 px-2 text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white font-semibold cursor-pointer"
+                                  title="Clear remaining due at counter"
+                                >
+                                  Pay Due
+                                </Button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* User Profile & Session Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
@@ -1752,6 +2101,20 @@ export default function DashboardPage() {
         isOpen={showViewLabReportModal}
         onClose={() => setShowViewLabReportModal(false)}
         report={selectedLabReportForView}
+      />
+
+      {/* Create Official Hospital Cash Memo & Invoice Dialog */}
+      <CreateInvoiceDialog
+        isOpen={showCreateInvoiceModal}
+        onClose={() => setShowCreateInvoiceModal(false)}
+        onSuccess={handleInvoiceCreated}
+      />
+
+      {/* View & Print Hospital Cash Memo Dialog */}
+      <ViewCashMemoDialog
+        invoice={selectedInvoiceForView}
+        isOpen={showViewInvoiceModal}
+        onClose={() => setShowViewInvoiceModal(false)}
       />
     </div>
   );

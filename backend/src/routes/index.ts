@@ -5,6 +5,7 @@ import doctorRoutes from "./doctor.routes";
 import appointmentRoutes from "./appointment.routes";
 import prescriptionRoutes from "./prescription.routes";
 import labReportRoutes from "./labReport.routes";
+import billingRoutes from "./billing.routes";
 
 const router = Router();
 
@@ -43,5 +44,8 @@ router.use("/prescriptions", prescriptionRoutes);
 
 // Diagnostic & Laboratory Test Report routes
 router.use("/lab-reports", labReportRoutes);
+
+// Hospital Billing & Invoicing routes
+router.use("/billing", billingRoutes);
 
 export default router;
