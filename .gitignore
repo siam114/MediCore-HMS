@@ -1,25 +1,13 @@
-# Secret / Local Documentation (never commit)
+# Security & sensitive files (never commit)
 PROJECT_CREDENTIALS_AND_INFO.md
 *.local.md
 notes.txt
 secrets.txt
+credentials.json
+*.pem
+*.key
 
-# Dependencies
-node_modules/
-frontend/node_modules/
-backend/node_modules/
-
-# Next.js & TypeScript build
-.next/
-frontend/.next/
-out/
-frontend/out/
-build/
-frontend/build/
-dist/
-backend/dist/
-
-# Environment files
+# Environment configurations
 .env
 .env*.local
 *.env
@@ -31,10 +19,29 @@ backend/.env*.local
 !frontend/.env.example
 !backend/.env.example
 
-# Debug logs
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+.pnp
+.pnp.js
+
+# Next.js & TypeScript build outputs
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+frontend/build/
+dist/
+backend/dist/
+.turbo/
+
+# Debug and runtime logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 *.log
 
 # TypeScript cache
@@ -43,8 +50,10 @@ frontend/*.tsbuildinfo
 next-env.d.ts
 frontend/next-env.d.ts
 
-# OS & Editor
+# OS & Editor files
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
