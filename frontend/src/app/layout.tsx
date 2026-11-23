@@ -15,9 +15,13 @@ export const metadata: Metadata = {
   title: "MediCore – Tertiary Care Hospital & Research Center",
   description: "Next-generation healthcare management portal, online specialist doctor appointments, emergency 24/7 patient services, and clinical research.",
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/medicore-logo.png", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/medicore-logo.png",
+    apple: "/medicore-logo.png",
   },
 };
 
