@@ -546,14 +546,14 @@ export default function DashboardPage() {
             title="Back to MediCore Homepage"
             className="flex items-center gap-2.5 group cursor-pointer hover:opacity-90 transition-opacity"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors">
-              <Activity className="h-6 w-6" />
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/30 group-hover:bg-teal-700 transition-colors shrink-0">
+              <Activity className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
-            <div>
-              <span className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+            <div className="min-w-0">
+              <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
                 MediCore HMS
               </span>
-              <span className="ml-2 text-xs text-slate-400">
+              <span className="hidden sm:inline-block ml-2 text-xs text-slate-400">
                 {user.role === "ADMIN" ? "Admin Control Center" : "Hospital Portal"}
               </span>
             </div>
