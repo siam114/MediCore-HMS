@@ -36,6 +36,7 @@ export default function LoginPage() {
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [googleName, setGoogleName] = useState("SM SIAM");
   const [googleEmail, setGoogleEmail] = useState("siam.patient@gmail.com");
+  const [showDevCredentials, setShowDevCredentials] = useState(false);
 
   const {
     register,
@@ -279,46 +280,66 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {/* Quick Demo Credentials Box */}
-            <div className="space-y-2">
-              <div className="rounded-lg border border-purple-200/60 bg-purple-50/50 p-2.5 text-xs dark:border-purple-900/40 dark:bg-purple-950/20">
-                <div className="flex items-center justify-between font-medium text-purple-800 dark:text-purple-300">
-                  <span className="flex items-center gap-1.5 font-semibold">
-                    <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
-                    Master Super Admin (SM Siam)
+            {/* Development Environment Quick Fill (Auto-Disabled in Production) */}
+            {process.env.NODE_ENV !== "production" && (
+              <div className="pt-2 border-t border-dashed border-slate-200 dark:border-slate-800 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    Dev Sandbox Auto-Fill
                   </span>
                   <button
                     type="button"
-                    onClick={fillAdminCredentials}
-                    className="rounded bg-purple-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-purple-700 shadow-sm cursor-pointer"
+                    onClick={() => setShowDevCredentials(!showDevCredentials)}
+                    className="text-[11px] font-semibold text-teal-600 hover:text-teal-700 dark:text-teal-400 cursor-pointer"
                   >
-                    Auto Fill SM Siam
+                    {showDevCredentials ? "Hide Quick Fill" : "Show Quick Fill"}
                   </button>
                 </div>
-                <p className="mt-1 text-slate-500 text-[11px] dark:text-slate-400">
-                  <span className="font-mono text-slate-700 dark:text-slate-300">smsiam987@gmail.com</span>
-                </p>
-              </div>
 
-              <div className="rounded-lg border border-teal-200/60 bg-teal-50/50 p-2.5 text-xs dark:border-teal-900/40 dark:bg-teal-950/20">
-                <div className="flex items-center justify-between font-medium text-teal-800 dark:text-teal-300">
-                  <span className="flex items-center gap-1.5 font-semibold">
-                    <Stethoscope className="h-3.5 w-3.5 text-teal-600" />
-                    Doctor Account
-                  </span>
-                  <button
-                    type="button"
-                    onClick={fillTestCredentials}
-                    className="rounded bg-teal-600 px-2 py-0.5 text-[11px] text-white hover:bg-teal-700 shadow-sm"
-                  >
-                    Auto Fill Doctor
-                  </button>
-                </div>
-                <p className="mt-1 text-slate-500 text-[11px] dark:text-slate-400">
-                  <span className="font-mono text-slate-700 dark:text-slate-300">dr.siam@medicore.com</span> / <span className="font-mono text-slate-700 dark:text-slate-300">SecurePassword123</span>
-                </p>
+                {showDevCredentials && (
+                  <div className="space-y-2 pt-1 animate-in fade-in">
+                    <div className="rounded-lg border border-purple-200/60 bg-purple-50/50 p-2.5 text-xs dark:border-purple-900/40 dark:bg-purple-950/20">
+                      <div className="flex items-center justify-between font-medium text-purple-800 dark:text-purple-300">
+                        <span className="flex items-center gap-1.5 font-semibold text-[11px]">
+                          <ShieldCheck className="h-3.5 w-3.5 text-purple-600" />
+                          Master Super Admin (SM Siam)
+                        </span>
+                        <button
+                          type="button"
+                          onClick={fillAdminCredentials}
+                          className="rounded bg-purple-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-purple-700 shadow-sm cursor-pointer"
+                        >
+                          Auto Fill Admin
+                        </button>
+                      </div>
+                      <p className="mt-0.5 text-slate-500 text-[10px] dark:text-slate-400">
+                        Login ID: <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">smsiam987@gmail.com</span>
+                      </p>
+                    </div>
+
+                    <div className="rounded-lg border border-teal-200/60 bg-teal-50/50 p-2.5 text-xs dark:border-teal-900/40 dark:bg-teal-950/20">
+                      <div className="flex items-center justify-between font-medium text-teal-800 dark:text-teal-300">
+                        <span className="flex items-center gap-1.5 font-semibold text-[11px]">
+                          <Stethoscope className="h-3.5 w-3.5 text-teal-600" />
+                          Doctor Portal
+                        </span>
+                        <button
+                          type="button"
+                          onClick={fillTestCredentials}
+                          className="rounded bg-teal-600 px-2 py-0.5 text-[11px] text-white hover:bg-teal-700 shadow-sm cursor-pointer"
+                        >
+                          Auto Fill Doctor
+                        </button>
+                      </div>
+                      <p className="mt-0.5 text-slate-500 text-[10px] dark:text-slate-400">
+                        Login ID: <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">dr.siam@medicore.com</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-2 border-t border-slate-100 bg-slate-50/50 px-6 py-4 text-center dark:border-slate-800/50 dark:bg-slate-900/30">

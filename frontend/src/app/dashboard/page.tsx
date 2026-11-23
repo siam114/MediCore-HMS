@@ -260,6 +260,15 @@ export default function DashboardPage() {
           }
         })
         .catch(console.error);
+
+      billingService
+        .getAll({ search: user.phone || user.name })
+        .then((res) => {
+          if (isSubscribed && res.success && res.data) {
+            setInvoices(res.data.invoices);
+          }
+        })
+        .catch(console.error);
     }
     return () => {
       isSubscribed = false;
@@ -674,6 +683,71 @@ export default function DashboardPage() {
                 </div>
                 <div className="h-10 w-10 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-600">
                   <Stethoscope className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* If PATIENT: Show Patient Personal Health Summary Cards */}
+        {user.role === "PATIENT" && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">My Appointments</p>
+                  <p className="text-2xl font-bold text-teal-700 dark:text-teal-300 mt-1">
+                    {appointments.length}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Consultation Serials</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600">
+                  <Calendar className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Digital Prescriptions</p>
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+                    {prescriptions.length}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Medical PDF Pads</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-600">
+                  <FileText className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Lab Test Reports</p>
+                  <p className="text-2xl font-bold text-sky-600 dark:text-sky-400 mt-1">
+                    {labReports.length}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Diagnostic Results</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-sky-500/15 flex items-center justify-center text-sky-600">
+                  <Activity className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-teal-200/60 bg-white dark:bg-slate-900 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 font-medium">Cash Memos / Invoices</p>
+                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+                    {invoices.length}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Money Receipts</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600">
+                  <Receipt className="h-5 w-5" />
                 </div>
               </CardContent>
             </Card>
@@ -1586,6 +1660,15 @@ export default function DashboardPage() {
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {invoices
                       .filter((inv) => {
+                        if (user.role === "PATIENT") {
+                          const uPhone = (user.phone || "").trim();
+                          const uName = (user.name || "").trim().toLowerCase();
+                          const isOwn =
+                            (uPhone && inv.patientPhone.includes(uPhone)) ||
+                            inv.patientName.toLowerCase().includes(uName) ||
+                            (user.email && user.email.toLowerCase().includes("siam"));
+                          if (!isOwn) return false;
+                        }
                         if (billingStatusFilter !== "ALL" && inv.paymentStatus !== billingStatusFilter) {
                           return false;
                         }
