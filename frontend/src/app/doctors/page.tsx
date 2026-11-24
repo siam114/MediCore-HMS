@@ -350,7 +350,7 @@ export default function DoctorsDirectoryPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="sm:hidden inline-flex items-center justify-center h-8.5 w-8.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition-colors cursor-pointer shrink-0"
+              className="lg:hidden inline-flex items-center justify-center h-8.5 w-8.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 transition-colors cursor-pointer shrink-0"
               aria-label="Open Navigation Sidebar"
               aria-expanded={mobileMenuOpen}
             >
@@ -366,7 +366,7 @@ export default function DoctorsDirectoryPage() {
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-[99] bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 sm:hidden",
+          "fixed inset-0 z-[99] bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 lg:hidden",
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
         onClick={() => setMobileMenuOpen(false)}
@@ -376,7 +376,7 @@ export default function DoctorsDirectoryPage() {
       {/* Slide-over Sidebar Drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 right-0 z-[100] w-full max-w-[320px] sm:max-w-[380px] h-screen h-dvh bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 ease-in-out sm:hidden",
+          "fixed inset-y-0 right-0 z-[100] w-full max-w-[320px] sm:max-w-[380px] h-screen h-dvh bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col transition-transform duration-300 ease-in-out lg:hidden",
           mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
         role="dialog"
