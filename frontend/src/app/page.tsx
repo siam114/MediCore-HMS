@@ -47,7 +47,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { MediCoreLogoIcon } from "@/components/shared";
+import { MediCoreLogoIcon, AnimatedCounter } from "@/components/shared";
 
 // 1. Core Clinical Centers of Excellence
 const CLINICAL_DEPARTMENTS = [
@@ -127,10 +127,10 @@ const CLINICAL_DEPARTMENTS = [
 
 // 2. Hospital Stats
 const HOSPITAL_STATS = [
-  { value: "120+", label: "Specialist Physicians", sub: "Internationally Board-Certified" },
-  { value: "450+", label: "Inpatient Beds", sub: "50+ Modular Smart ICUs" },
-  { value: "25,000+", label: "Surgeries Completed", sub: "99.4% Verified Clinical Success" },
-  { value: "24/7", label: "Emergency & Trauma", sub: "Dedicated Stroke & Cardiac Units" },
+  { target: 120, suffix: "+", label: "Specialist Physicians", sub: "Internationally Board-Certified" },
+  { target: 450, suffix: "+", label: "Inpatient Beds", sub: "50+ Modular Smart ICUs" },
+  { target: 25000, suffix: "+", label: "Surgeries Completed", sub: "99.4% Verified Clinical Success" },
+  { target: 24, suffix: "/7", label: "Emergency & Trauma", sub: "Dedicated Stroke & Cardiac Units" },
 ];
 
 // 3. Preventive Health Packages
@@ -985,7 +985,11 @@ export default function HomePage() {
             {HOSPITAL_STATS.map((stat, idx) => (
               <div key={idx} className={cn("text-center space-y-1", idx > 0 ? "pt-4 sm:pt-0" : "")}>
                 <p className="text-3xl sm:text-4xl md:text-5xl font-black text-teal-600 dark:text-teal-400 tracking-tight">
-                  {stat.value}
+                  <AnimatedCounter
+                    target={stat.target}
+                    suffix={stat.suffix}
+                    duration={2000}
+                  />
                 </p>
                 <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
                   {stat.label}
