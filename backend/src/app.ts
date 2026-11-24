@@ -17,7 +17,23 @@ export function createApp(): Application {
   // Cross-Origin Resource Sharing (CORS)
   app.use(
     cors({
-      origin: [ENV.CLIENT_URL, "http://localhost:3000", "http://127.0.0.1:3000"],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const allowedOrigins = [
+          ENV.CLIENT_URL,
+          "https://medi-core-taupe.vercel.app",
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+        ];
+        if (
+          allowedOrigins.includes(origin) ||
+          origin.endsWith(".vercel.app") ||
+          origin.includes("localhost")
+        ) {
+          return callback(null, true);
+        }
+        return callback(null, false);
+      },
       credentials: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
