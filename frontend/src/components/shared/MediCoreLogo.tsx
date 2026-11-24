@@ -68,3 +68,43 @@ export function MediCoreLogo({
     </div>
   );
 }
+
+export interface MediCoreLoaderProps {
+  className?: string;
+  size?: number;
+  text?: string;
+}
+
+export function MediCoreLoader({
+  className,
+  size = 56,
+  text = "Loading MediCore...",
+}: MediCoreLoaderProps) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center gap-3.5 select-none", className)}>
+      <div className="relative flex items-center justify-center">
+        {/* Pulsing ambient rings */}
+        <div
+          style={{ width: size + 24, height: size + 24 }}
+          className="absolute rounded-full bg-teal-500/15 dark:bg-teal-400/10 animate-ping opacity-60"
+        />
+        <div
+          style={{ width: size + 16, height: size + 16 }}
+          className="absolute rounded-full border border-teal-500/30 dark:border-teal-400/20 animate-pulse"
+        />
+        {/* 3D Glass Logo Emblem */}
+        <div className="animate-pulse">
+          <MediCoreLogoIcon
+            size={size}
+            className="filter drop-shadow-[0_4px_16px_rgba(13,148,136,0.35)]"
+          />
+        </div>
+      </div>
+      {text && (
+        <p className="text-xs sm:text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 animate-pulse">
+          {text}
+        </p>
+      )}
+    </div>
+  );
+}

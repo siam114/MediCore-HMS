@@ -33,7 +33,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { doctorService } from "@/services/api";
 import { BookAppointmentDialog } from "@/components/appointments/BookAppointmentDialog";
-import { MediCoreLogoIcon } from "@/components/shared";
+import { MediCoreLogoIcon, MediCoreLoader } from "@/components/shared";
 import type { Doctor } from "@/types";
 
 const DEPARTMENTS = [
@@ -145,9 +145,8 @@ function DoctorsDirectoryContent() {
 
       {/* Doctor Cards Grid */}
       {isLoading ? (
-        <div className="text-center py-20 space-y-3">
-          <Activity className="h-9 w-9 animate-spin text-teal-600 mx-auto" />
-          <p className="text-sm font-medium text-slate-500">Connecting to clinical registry...</p>
+        <div className="py-20 flex justify-center">
+          <MediCoreLoader size={56} text="Connecting to clinical physician registry..." />
         </div>
       ) : doctors.length === 0 ? (
         <div className="text-center py-20 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/70 dark:bg-slate-900/40 p-8 space-y-3 max-w-xl mx-auto">
@@ -570,9 +569,8 @@ export default function DoctorsDirectoryPage() {
 
       {/* Content Wrapped in Suspense */}
       <Suspense fallback={
-        <div className="text-center py-20">
-          <Activity className="h-8 w-8 animate-spin text-teal-600 mx-auto" />
-          <p className="text-sm text-slate-500 mt-2">Loading Directory...</p>
+        <div className="min-h-[50vh] flex items-center justify-center py-20">
+          <MediCoreLoader size={64} text="Loading physician profiles..." />
         </div>
       }>
         <DoctorsDirectoryContent />

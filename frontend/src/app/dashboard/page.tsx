@@ -57,7 +57,7 @@ import { CreateLabReportDialog } from "@/components/labReports/CreateLabReportDi
 import { ViewLabReportDialog } from "@/components/labReports/ViewLabReportDialog";
 import { CreateInvoiceDialog } from "@/components/billing/CreateInvoiceDialog";
 import { ViewCashMemoDialog } from "@/components/billing/ViewCashMemoDialog";
-import { MediCoreLogoIcon } from "@/components/shared";
+import { MediCoreLogoIcon, MediCoreLoader } from "@/components/shared";
 import { FlaskConical } from "lucide-react";
 
 const ALL_DAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -522,10 +522,7 @@ export default function DashboardPage() {
   if (isLoading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="text-center space-y-3">
-          <Activity className="h-8 w-8 animate-spin text-teal-600 mx-auto" />
-          <p className="text-sm text-slate-500">Loading your profile...</p>
-        </div>
+        <MediCoreLoader size={64} text="Connecting to your clinical portal..." />
       </div>
     );
   }
