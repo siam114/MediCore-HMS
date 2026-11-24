@@ -16,22 +16,20 @@ async function main() {
     console.log(`[Admin] Removed ${delResult.deletedCount} old dummy admin account(s).`);
 
     // 2. Hash Super Admin password
-    const plainPassword = process.env.SUPERADMIN_PASSWORD || "AdminSecurePass123!";
+    const plainPassword = "smsiam114674111@";
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-    // 3. Upsert Super Admin account
-    const superAdminEmail = process.env.SUPERADMIN_EMAIL || "admin@medicore.com";
-    const superAdminName = process.env.SUPERADMIN_NAME || "Hospital Super Admin";
-    const superAdminPhone = process.env.SUPERADMIN_PHONE || "01567898506";
+    // 3. Upsert Super Admin account for SM Siam
+    const superAdminEmail = "smsiam987@gmail.com";
     const updateResult = await usersCollection.updateOne(
       { email: superAdminEmail },
       {
         $set: {
-          name: superAdminName,
+          name: "SM Siam",
           email: superAdminEmail,
           password: hashedPassword,
           role: "ADMIN",
-          phone: superAdminPhone,
+          phone: "01567898506",
           isVerified: true,
           status: "ACTIVE",
           updatedAt: new Date(),

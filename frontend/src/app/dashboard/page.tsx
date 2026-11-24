@@ -984,7 +984,7 @@ export default function DashboardPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {allUsers.map((item) => {
-                      const isOwner = item.role === "ADMIN";
+                      const isOwner = item.email === "smsiam987@gmail.com";
                       return (
                         <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30">
                           <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
