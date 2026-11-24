@@ -135,15 +135,7 @@ MediCore-HMS/
    cp .env.example .env
    ```
 
-4. Configure your `.env` variables:
-   ```env
-   PORT=5000
-   NODE_ENV=development
-   MONGODB_URI=mongodb://127.0.0.1:27017/medicore_hms
-   JWT_SECRET=your_secure_jwt_secret_key_here
-   JWT_EXPIRES_IN=7d
-   CLIENT_URL=http://localhost:3000
-   ```
+4. Configure your private `.env` variables with your local database and security tokens (kept secure and excluded from version control).
 
 5. Start the backend development server:
    ```bash
@@ -170,10 +162,7 @@ MediCore-HMS/
    cp .env.example .env.local
    ```
 
-4. Configure your `.env.local`:
-   ```env
-   NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
-   ```
+4. Configure your `.env.local` with your backend API URL and environment settings.
 
 5. Start the frontend development server:
    ```bash

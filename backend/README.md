@@ -133,13 +133,8 @@ backend/
    cd backend
    ```
 
-2. Configure environment variables in `.env`:
-   ```bash
-   # MongoDB: local or MongoDB Atlas connection string
-   MONGODB_URI=mongodb://127.0.0.1:27017/medicore_hms
-   JWT_SECRET=your_jwt_secret_key
-   PORT=5000
-   ```
+2. Configure environment variables in `.env` based on `.env.example`:
+   Set up your private database connection string and authentication secrets (excluded from Git).
 
 3. Start development server (with hot-reload):
    ```bash
