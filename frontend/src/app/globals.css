@@ -131,4 +131,8 @@
     overflow-x: clip;
     max-width: 100vw;
   }
+  select {
+    padding-right: 2rem !important;
+    cursor: pointer;
+  }
 }

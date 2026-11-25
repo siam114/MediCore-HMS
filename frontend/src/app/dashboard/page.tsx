@@ -1019,7 +1019,7 @@ export default function DashboardPage() {
                               <select
                                 value={item.role}
                                 onChange={(e) => handleRoleChange(item.id, e.target.value as any)}
-                                className="h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:border-teal-500 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-colors"
+                                className="h-8 px-3 pr-8 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:border-teal-500 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-colors"
                               >
                                 <option value="PATIENT">Patient Portal</option>
                                 <option value="DOCTOR">Physician / Doctor</option>
@@ -1937,7 +1937,7 @@ export default function DashboardPage() {
                       id="docDept"
                       value={docDept}
                       onChange={(e) => setDocDept(e.target.value)}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
                     >
                       <option value="Cardiology">Cardiology</option>
                       <option value="Neurology">Neurology</option>

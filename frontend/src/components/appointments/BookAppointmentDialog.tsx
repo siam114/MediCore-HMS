@@ -435,7 +435,7 @@ export function BookAppointmentDialog({
                     id="patientGender"
                     value={patientGender}
                     onChange={(e) => setPatientGender(e.target.value as PatientGender)}
-                    className="h-10 w-full rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                    className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 pr-8 text-xs font-medium text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-600 cursor-pointer"
                   >
                     <option value="MALE">Male</option>
                     <option value="FEMALE">Female</option>

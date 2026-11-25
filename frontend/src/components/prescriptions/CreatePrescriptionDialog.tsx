@@ -259,7 +259,7 @@ export function CreatePrescriptionDialog({
                 <select
                   value={patientGender}
                   onChange={(e) => setPatientGender(e.target.value as any)}
-                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm"
+                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 pr-8 py-1 text-sm shadow-sm cursor-pointer"
                 >
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>

@@ -260,7 +260,7 @@ export function CreateInvoiceDialog({
                     id="patientGender"
                     value={patientGender}
                     onChange={(e) => setPatientGender(e.target.value as "MALE" | "FEMALE" | "OTHER")}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
                   >
                     <option value="MALE">Male</option>
                     <option value="FEMALE">Female</option>
@@ -354,7 +354,7 @@ export function CreateInvoiceDialog({
                     <select
                       value={item.category}
                       onChange={(e) => handleItemChange(idx, "category", e.target.value as BillingItemCategory)}
-                      className="flex h-8.5 w-full rounded-md border border-input bg-white dark:bg-slate-900 px-2 text-xs"
+                      className="flex h-8.5 w-full rounded-md border border-input bg-white dark:bg-slate-900 px-2.5 pr-7 text-xs cursor-pointer"
                     >
                       <option value="CONSULTATION">Consultation</option>
                       <option value="LAB_TEST">Lab Test</option>
@@ -425,7 +425,7 @@ export function CreateInvoiceDialog({
                       id="payMethod"
                       value={paymentMethod}
                       onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
                     >
                       <option value="CASH">Cash (Hospital Counter)</option>
                       <option value="BKASH">bKash Mobile Payment</option>

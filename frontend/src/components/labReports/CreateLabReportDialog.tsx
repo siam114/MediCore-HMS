@@ -256,7 +256,7 @@ export function CreateLabReportDialog({
                   id="genderSelect"
                   value={patientGender}
                   onChange={(e) => setPatientGender(e.target.value as any)}
-                  className="w-full h-10 px-3 rounded-lg border border-slate-200 bg-white text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                  className="w-full h-10 px-3 pr-8 rounded-lg border border-slate-200 bg-white text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 cursor-pointer"
                 >
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
