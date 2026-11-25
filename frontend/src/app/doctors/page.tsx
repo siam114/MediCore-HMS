@@ -269,39 +269,17 @@ function DoctorsDirectoryContent() {
 
 export default function DoctorsDirectoryPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showHeader, setShowHeader] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Smart sticky header: hide on scroll down, reveal smoothly on scroll up ("opore dike scroll korle abar ase")
+  // Track scroll state for shadow & glassmorphism
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      setIsScrolled(currentScrollY > 40);
-
-      if (mobileMenuOpen) {
-        setShowHeader(true);
-        return;
-      }
-
-      if (currentScrollY <= 80) {
-        setShowHeader(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 6) {
-        // Scrolling down -> hide navbar
-        setShowHeader(false);
-      } else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 6) {
-        // Scrolling up -> smoothly reveal sticky navbar
-        setShowHeader(true);
-      }
-
-      lastScrollY = currentScrollY;
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [mobileMenuOpen]);
+  }, []);
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -339,9 +317,8 @@ export default function DoctorsDirectoryPage() {
       {/* Main Header */}
       <header
         className={cn(
-          "sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95 transition-all duration-300 ease-in-out",
-          isScrolled ? "shadow-md" : "",
-          showHeader || mobileMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"
+          "sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/95 transition-shadow duration-200",
+          isScrolled ? "shadow-md" : ""
         )}
       >
         <div className="w-full max-w-[1640px] mx-auto flex h-16 sm:h-20 items-center justify-between px-3 sm:px-6 md:px-8 lg:px-12 2xl:px-16 gap-2">
