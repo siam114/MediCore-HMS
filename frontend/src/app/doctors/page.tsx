@@ -2,7 +2,9 @@
 
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { useAuthStore } from "@/store";
 import {
   Activity,
   Search,
@@ -56,6 +58,8 @@ const DEPARTMENTS = [
 ];
 
 function DoctorsDirectoryContent() {
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialDept = searchParams.get("dept") || "All";
   const initialSearch = searchParams.get("search") || "";
@@ -65,6 +69,18 @@ function DoctorsDirectoryContent() {
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDoctorForBooking, setSelectedDoctorForBooking] = useState<Doctor | null>(null);
+
+  const handleBookDoctor = (doctor: Doctor) => {
+    if (!user) {
+      toast.info("Please log in to your patient account to book a doctor serial.", {
+        action: {
+          label: "Log In",
+          onClick: () => router.push("/login?redirect=/doctors"),
+        },
+      });
+    }
+    setSelectedDoctorForBooking(doctor);
+  };
 
   useEffect(() => {
     let isSubscribed = true;
@@ -244,7 +260,7 @@ function DoctorsDirectoryContent() {
 
                   <Button
                     size="sm"
-                    onClick={() => setSelectedDoctorForBooking(doctor)}
+                    onClick={() => handleBookDoctor(doctor)}
                     className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4.5 py-2.5 text-xs rounded-xl shadow-md shadow-teal-600/25 shrink-0 whitespace-nowrap cursor-pointer transition-all hover:scale-[1.02]"
                   >
                     Book Serial
@@ -268,6 +284,7 @@ function DoctorsDirectoryContent() {
 }
 
 export default function DoctorsDirectoryPage() {
+  const user = useAuthStore((state) => state.user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -343,13 +360,13 @@ export default function DoctorsDirectoryPage() {
 
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link
-              href="/login"
+              href={user ? "/dashboard" : "/login"}
               className={cn(
                 buttonVariants({ variant: "outline", size: "sm" }),
-                "hidden sm:inline-flex border-slate-300 font-semibold text-xs h-9 px-3.5 rounded-xl"
+                "hidden sm:inline-flex border-slate-300 font-semibold text-xs h-9 px-3.5 rounded-xl cursor-pointer"
               )}
             >
-              Sign In
+              {user ? "Dashboard" : "Sign In"}
             </Link>
             <Link
               href="/register"

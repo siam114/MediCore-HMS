@@ -47,6 +47,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store";
 import { MediCoreLogoIcon, AnimatedCounter } from "@/components/shared";
 
 // 1. Core Clinical Centers of Excellence
@@ -342,6 +343,7 @@ const HOSPITAL_NEWS = [
 
 export default function HomePage() {
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchDoctor, setSearchDoctor] = useState("");
   const [selectedDept, setSelectedDept] = useState("All");
@@ -537,15 +539,15 @@ export default function HomePage() {
               <span>10666</span>
             </a>
 
-            {/* Sign in - Visible on Tablets & Desktop */}
+            {/* Sign in / Dashboard - Visible on Tablets & Desktop */}
             <Link
-              href="/login"
+              href={user ? "/dashboard" : "/login"}
               className={cn(
                 buttonVariants({ variant: "outline", size: "sm" }),
                 "hidden md:inline-flex border-slate-300 font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 text-xs px-3.5 py-2 h-9 rounded-xl whitespace-nowrap shadow-xs"
               )}
             >
-              Sign In
+              {user ? "Dashboard" : "Sign In"}
             </Link>
 
             {/* Book Serial - Visible on sm and up (Tablet & Desktop) */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Calendar,
   Clock,
@@ -14,12 +15,15 @@ import {
   User,
   AlertCircle,
   FileText,
+  Lock,
+  ShieldCheck,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { appointmentService } from "@/services/api";
 import { useAuthStore } from "@/store";
 import type { Doctor, Appointment, PatientGender } from "@/types";
@@ -77,6 +81,11 @@ export function BookAppointmentDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      toast.error("Please log in to your patient account first to book an appointment");
+      return;
+    }
 
     if (!patientName.trim()) {
       toast.error("Please enter the patient full name");
@@ -142,9 +151,61 @@ export function BookAppointmentDialog({
         </button>
 
         {/* ========================================================================= */}
-        {/* VIEW 1: CONFIRMED SERIAL TOKEN SLIP                                       */}
+        {/* VIEW 0: LOGIN REQUIRED GATE                                               */}
         {/* ========================================================================= */}
-        {confirmedAppointment ? (
+        {!user ? (
+          <div className="overflow-y-auto p-6 sm:p-8 space-y-5 flex-1 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-400 dark:border-teal-800 shadow-md">
+              <Lock className="h-8 w-8" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 border border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-900">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Patient Login Required
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                Log In to Book Serial
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                To schedule a consultation and generate an official serial token with <strong className="text-slate-800 dark:text-slate-200">{doctor.name}</strong> ({doctor.department}), please log in to your patient account first.
+              </p>
+            </div>
+
+            {/* Doctor summary card */}
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-left dark:border-slate-800 dark:bg-slate-900/60 flex items-center justify-between">
+              <div>
+                <p className="font-bold text-sm text-slate-900 dark:text-slate-100">{doctor.name}</p>
+                <p className="text-xs text-slate-500">{doctor.specialization} • {doctor.roomNumber}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 uppercase font-bold block">Consultation Fee</span>
+                <span className="font-black text-sm text-teal-700 dark:text-teal-400">৳{doctor.consultationFee.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
+              <Link
+                href="/login?redirect=/doctors"
+                className={cn(
+                  buttonVariants({ size: "default" }),
+                  "flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs h-11 rounded-xl shadow-md shadow-teal-600/25 cursor-pointer text-center"
+                )}
+              >
+                Log In to Patient Account
+              </Link>
+              <Link
+                href="/register?redirect=/doctors"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "default" }),
+                  "flex-1 border-slate-300 font-bold text-xs h-11 rounded-xl cursor-pointer text-center"
+                )}
+              >
+                Create New Patient Account
+              </Link>
+            </div>
+          </div>
+        ) : confirmedAppointment ? (
           <div className="overflow-y-auto p-4 sm:p-8 space-y-4 sm:space-y-6 flex-1">
             <div className="text-center space-y-2">
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">

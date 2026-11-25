@@ -10,11 +10,10 @@ import { USER_ROLES } from "../constants/roles";
 
 const router = Router();
 
-// Public / Patient routes
-// Booking serial can be done by both guest patients and logged-in patients
+// Patient routes - Booking serial requires authenticated patient account
 router.post(
   "/",
-  optionalAuthenticate,
+  authenticate,
   validate(createAppointmentSchema),
   AppointmentController.createAppointment
 );
