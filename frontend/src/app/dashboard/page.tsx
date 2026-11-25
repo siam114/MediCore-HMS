@@ -1846,23 +1846,23 @@ export default function DashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4 backdrop-blur-sm animate-in fade-in">
           <div className="w-full max-w-2xl max-h-[92vh] sm:max-h-[90vh] flex flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
             {/* Modal Header (Fixed at top) */}
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-900/70">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/20">
-                  <Stethoscope className="h-5 w-5" />
+            <div className="flex items-center justify-between border-b border-slate-100 px-4 sm:px-5 py-3 sm:py-4 dark:border-slate-800 shrink-0 bg-slate-50/70 dark:bg-slate-900/70">
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 pr-2">
+                <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/20">
+                  <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">
+                <div className="min-w-0">
+                  <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 truncate">
                     Add New Specialist Doctor
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-[11px] sm:text-xs text-slate-500 truncate">
                     Registers doctor profile and creates custom portal credentials
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowAddDoctorModal(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
                 aria-label="Close dialog"
               >
                 ✕
@@ -1871,7 +1871,7 @@ export default function DashboardPage() {
 
             {/* Scrollable Form Body */}
             <form onSubmit={handleCreateDoctor} className="flex flex-col flex-1 overflow-hidden">
-              <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-sm flex-1">
+              <div className="p-3.5 sm:p-6 overflow-y-auto space-y-4 text-xs sm:text-sm flex-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label htmlFor="docName">Doctor Full Name *</Label>
@@ -2092,20 +2092,20 @@ export default function DashboardPage() {
               </div>
 
               {/* Modal Footer (Sticky at bottom) */}
-              <div className="flex items-center justify-end gap-3 px-5 sm:px-6 py-3.5 border-t border-slate-100 bg-slate-50/80 dark:border-slate-800 dark:bg-slate-900/70 shrink-0">
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 px-4 sm:px-6 py-3 border-t border-slate-100 bg-slate-50/80 dark:border-slate-800 dark:bg-slate-900/70 shrink-0">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setShowAddDoctorModal(false)}
                   disabled={isSubmittingDoctor}
-                  className="cursor-pointer"
+                  className="cursor-pointer w-full sm:w-auto h-10 sm:h-9"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSubmittingDoctor}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-medium shadow-sm cursor-pointer"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-medium shadow-sm cursor-pointer w-full sm:w-auto h-10 sm:h-9"
                 >
                   {isSubmittingDoctor ? (
                     <>
@@ -2124,8 +2124,8 @@ export default function DashboardPage() {
 
       {/* Success Modal Showing Newly Created Doctor Credentials */}
       {createdDoctorCredentials && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-teal-300 bg-white p-6 shadow-2xl dark:border-teal-800 dark:bg-slate-900 space-y-4 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2.5 sm:p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-teal-300 bg-white p-4 sm:p-6 shadow-2xl dark:border-teal-800 dark:bg-slate-900 space-y-4 text-center">
             <div className="h-12 w-12 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mx-auto">
               <CheckCircle2 className="h-6 w-6" />
             </div>

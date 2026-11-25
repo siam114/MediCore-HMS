@@ -424,35 +424,46 @@ export function ViewPrescriptionDialog({
           className="relative w-full max-w-4xl my-auto rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 overflow-hidden flex flex-col max-h-[94vh] print:max-h-none print:shadow-none print:border-none print:overflow-visible print:w-full print:max-w-none"
         >
           {/* Top Action Bar (always hidden on print) */}
-          <div className="print:hidden sticky top-0 z-20 flex flex-wrap items-center justify-between border-b border-slate-200 bg-slate-50/95 px-4 sm:px-6 py-3 dark:border-slate-800 dark:bg-slate-900/95 backdrop-blur-sm gap-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300">
-                <CheckCircle2 className="h-3.5 w-3.5 text-teal-600" />
-                Prescription: {prescription.prescriptionNumber}
-              </span>
-              {prescription.serialNumber && (
-                <span className="hidden sm:inline text-xs text-slate-500 font-medium">
-                  (Token #{prescription.serialNumber})
+          <div className="print:hidden sticky top-0 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 bg-slate-50/95 px-3.5 sm:px-6 py-3 dark:border-slate-800 dark:bg-slate-900/95 backdrop-blur-sm gap-2.5">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 pr-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-100 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-bold text-teal-800 dark:bg-teal-950 dark:text-teal-300 truncate">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-teal-600 shrink-0" />
+                  Rx: {prescription.prescriptionNumber}
                 </span>
-              )}
+                {prescription.serialNumber && (
+                  <span className="text-[11px] sm:text-xs text-slate-500 font-medium shrink-0">
+                    (Token #{prescription.serialNumber})
+                  </span>
+                )}
+              </div>
+
+              {/* Close button on mobile row 1 */}
+              <button
+                onClick={onClose}
+                className="sm:hidden rounded-xl p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                aria-label="Close dialog"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               {/* Direct PDF Download Button */}
               <Button
                 size="sm"
                 onClick={handleDownloadPdf}
                 disabled={isDownloading}
-                className="bg-teal-600 hover:bg-teal-700 text-white gap-2 text-xs font-bold px-4.5 py-2.5 h-10 rounded-xl shadow-md shadow-teal-600/25 cursor-pointer transition-all hover:scale-[1.02]"
+                className="bg-teal-600 hover:bg-teal-700 text-white gap-1.5 text-xs font-bold px-3 sm:px-4.5 py-2.5 h-9 sm:h-10 rounded-xl shadow-md shadow-teal-600/25 cursor-pointer transition-all hover:scale-[1.02] flex-1 sm:flex-initial"
               >
                 {isDownloading ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     Generating PDF...
                   </>
                 ) : (
                   <>
-                    <Download className="h-4 w-4" />
+                    <Download className="h-3.5 w-3.5" />
                     Download PDF
                   </>
                 )}
@@ -463,16 +474,16 @@ export function ViewPrescriptionDialog({
                 size="sm"
                 variant="outline"
                 onClick={handlePrint}
-                className="text-slate-700 border-slate-300 hover:bg-slate-100 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800 gap-2 text-xs font-bold px-4.5 py-2.5 h-10 rounded-xl cursor-pointer shadow-xs"
+                className="text-slate-700 border-slate-300 hover:bg-slate-100 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800 gap-1.5 text-xs font-bold px-3 sm:px-4.5 py-2.5 h-9 sm:h-10 rounded-xl cursor-pointer shadow-xs flex-1 sm:flex-initial"
               >
-                <Printer className="h-4 w-4" />
+                <Printer className="h-3.5 w-3.5" />
                 Print
               </Button>
 
-              {/* Close Button */}
+              {/* Close Button on desktop */}
               <button
                 onClick={onClose}
-                className="rounded-xl p-2 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors ml-1 cursor-pointer"
+                className="hidden sm:flex rounded-xl p-2 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors ml-1 cursor-pointer"
                 title="Close modal"
               >
                 <X className="h-5 w-5" />

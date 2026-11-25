@@ -266,7 +266,7 @@ export function ViewLabReportDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
       {/* Print Stylesheet */}
       <style jsx global>{`
         @media print {
@@ -300,20 +300,30 @@ export function ViewLabReportDialog({
 
       <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-auto max-h-[92vh] flex flex-col">
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 print:hidden shrink-0">
-          <div className="flex items-center gap-2">
-            <FlaskConical className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Diagnostic Laboratory Report — {report.reportNumber}
-            </h3>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 print:hidden shrink-0 gap-3">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center gap-2 min-w-0 pr-2">
+              <FlaskConical className="h-5 w-5 text-teal-600 dark:text-teal-400 shrink-0" />
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
+                Lab Report — {report.reportNumber}
+              </h3>
+            </div>
+            {/* Close button visible in top row on mobile */}
+            <button
+              onClick={onClose}
+              className="sm:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Close dialog"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <Button
               variant="outline"
               size="sm"
               onClick={handlePrint}
-              className="gap-1.5 text-xs font-semibold h-9 px-4 rounded-xl cursor-pointer"
+              className="gap-1.5 text-xs font-semibold h-9 px-3 sm:px-4 rounded-xl cursor-pointer flex-1 sm:flex-initial"
             >
               <Printer className="h-3.5 w-3.5" />
               Print Report
@@ -323,7 +333,7 @@ export function ViewLabReportDialog({
               size="sm"
               onClick={handleDownloadPdf}
               disabled={isGeneratingPdf}
-              className="gap-1.5 text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white h-9 px-4.5 rounded-xl shadow-xs cursor-pointer"
+              className="gap-1.5 text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white h-9 px-3.5 sm:px-4.5 rounded-xl shadow-xs cursor-pointer flex-1 sm:flex-initial"
             >
               <Download className="h-3.5 w-3.5" />
               {isGeneratingPdf ? "Generating..." : "Download PDF"}
@@ -331,7 +341,7 @@ export function ViewLabReportDialog({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 cursor-pointer"
+              className="hidden sm:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 cursor-pointer"
               aria-label="Close dialog"
             >
               <X className="h-5 w-5" />
@@ -434,8 +444,8 @@ export function ViewLabReportDialog({
             </div>
 
             {/* 4. Pathology Parameter Table */}
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <table className="w-full text-left text-xs">
+            <div className="border border-slate-200 rounded-xl overflow-x-auto">
+              <table className="w-full min-w-[500px] text-left text-xs">
                 <thead className="bg-slate-100/80 text-slate-700 font-bold border-b border-slate-200">
                   <tr>
                     <th className="py-2.5 px-3.5">Investigation / Parameter</th>

@@ -165,19 +165,19 @@ export function CreateLabReportDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
       <div className="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden my-auto max-h-[92vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
-          <div className="flex items-center gap-2">
-            <FlaskConical className="h-5 w-5 text-teal-600" />
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
+          <div className="flex items-center gap-2 min-w-0 pr-2">
+            <FlaskConical className="h-5 w-5 text-teal-600 shrink-0" />
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">
               Issue Official Diagnostic Lab Report
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
             aria-label="Close dialog"
           >
             <X className="h-5 w-5" />
@@ -185,7 +185,7 @@ export function CreateLabReportDialog({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-6 flex-1">
+        <form onSubmit={handleSubmit} className="overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 flex-1">
           {/* Quick Preset Selector */}
           <div className="bg-teal-50/70 border border-teal-200/80 rounded-xl p-3.5 space-y-1.5 dark:bg-teal-950/40 dark:border-teal-900">
             <Label className="text-xs font-bold text-teal-900 dark:text-teal-200">
@@ -306,9 +306,9 @@ export function CreateLabReportDialog({
               {parameters.map((param, idx) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-12 gap-2 items-center bg-white dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700"
+                  className="grid grid-cols-12 gap-1.5 sm:gap-2 items-center bg-white dark:bg-slate-800 p-2 sm:p-2.5 rounded-lg border border-slate-200 dark:border-slate-700"
                 >
-                  <div className="col-span-4">
+                  <div className="col-span-12 sm:col-span-4">
                     <Input
                       placeholder="Parameter (e.g. Hemoglobin)"
                       value={param.name}
@@ -318,7 +318,7 @@ export function CreateLabReportDialog({
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  <div className="col-span-4 sm:col-span-2">
                     <Input
                       placeholder="Result"
                       value={param.value}
@@ -328,7 +328,7 @@ export function CreateLabReportDialog({
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  <div className="col-span-3 sm:col-span-2">
                     <Input
                       placeholder="Unit (g/dL)"
                       value={param.unit}
@@ -337,7 +337,7 @@ export function CreateLabReportDialog({
                     />
                   </div>
 
-                  <div className="col-span-3">
+                  <div className="col-span-4 sm:col-span-3">
                     <Input
                       placeholder="Ref Range (13.0 - 17.5)"
                       value={param.referenceRange}
@@ -375,19 +375,19 @@ export function CreateLabReportDialog({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="h-10 px-5 rounded-xl font-semibold cursor-pointer"
+              className="h-10 px-5 rounded-xl font-semibold cursor-pointer w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="h-10.5 px-6 rounded-xl font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/25 cursor-pointer"
+              className="h-10.5 px-6 rounded-xl font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/25 cursor-pointer w-full sm:w-auto"
             >
               {isSubmitting ? "Generating..." : "Save & Generate Report"}
             </Button>

@@ -303,39 +303,50 @@ export function ViewCashMemoDialog({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4 backdrop-blur-sm animate-in fade-in no-print">
         <div className="w-full max-w-3xl max-h-[92vh] flex flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
           {/* Action Top Bar */}
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-sm">
-                <Receipt className="h-5 w-5" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 px-4 sm:px-5 py-3 sm:py-3.5 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 shrink-0 gap-3">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-600 text-white shadow-sm">
+                  <Receipt className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5 sm:gap-2">
+                    Official Cash Memo
+                    <Badge
+                      variant="outline"
+                      className={
+                        invoice.paymentStatus === "PAID"
+                          ? "border-emerald-300 bg-emerald-50 text-emerald-700 font-semibold text-[10px]"
+                          : invoice.paymentStatus === "PARTIAL"
+                          ? "border-amber-300 bg-amber-50 text-amber-700 font-semibold text-[10px]"
+                          : "border-rose-300 bg-rose-50 text-rose-700 font-semibold text-[10px]"
+                      }
+                    >
+                      {invoice.paymentStatus}
+                    </Badge>
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-mono">
+                    {invoice.invoiceNumber} • {formatDate(invoice.billingDate || invoice.createdAt)}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  Official Cash Memo
-                  <Badge
-                    variant="outline"
-                    className={
-                      invoice.paymentStatus === "PAID"
-                        ? "border-emerald-300 bg-emerald-50 text-emerald-700 font-semibold text-[10px]"
-                        : invoice.paymentStatus === "PARTIAL"
-                        ? "border-amber-300 bg-amber-50 text-amber-700 font-semibold text-[10px]"
-                        : "border-rose-300 bg-rose-50 text-rose-700 font-semibold text-[10px]"
-                    }
-                  >
-                    {invoice.paymentStatus}
-                  </Badge>
-                </h3>
-                <p className="text-xs text-slate-500 font-mono">
-                  {invoice.invoiceNumber} • {formatDate(invoice.billingDate || invoice.createdAt)}
-                </p>
-              </div>
+
+              {/* Close button visible on top row in mobile */}
+              <button
+                onClick={onClose}
+                className="sm:hidden flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer"
+                aria-label="Close dialog"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handlePrint}
-                className="h-8.5 gap-1.5 text-xs font-medium cursor-pointer"
+                className="h-8.5 gap-1.5 text-xs font-medium cursor-pointer flex-1 sm:flex-initial"
               >
                 <Printer className="h-3.5 w-3.5" />
                 Print A4
@@ -344,14 +355,15 @@ export function ViewCashMemoDialog({
                 size="sm"
                 onClick={handleDownloadPdf}
                 disabled={isGeneratingPdf}
-                className="h-8.5 gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold shadow-sm cursor-pointer"
+                className="h-8.5 gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold shadow-sm cursor-pointer flex-1 sm:flex-initial"
               >
                 <Download className="h-3.5 w-3.5" />
                 {isGeneratingPdf ? "Generating..." : "Download PDF"}
               </Button>
               <button
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer ml-1"
+                className="hidden sm:flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer ml-1"
+                aria-label="Close dialog"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -425,8 +437,8 @@ export function ViewCashMemoDialog({
               </div>
 
               {/* Line Items Table */}
-              <div className="mt-5 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
-                <table className="w-full text-left text-xs">
+              <div className="mt-5 overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+                <table className="w-full min-w-[500px] text-left text-xs">
                   <thead className="bg-teal-600 text-white font-semibold">
                     <tr>
                       <th className="py-2 px-3 w-10">#</th>
